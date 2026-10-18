@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Vatia — Mi panel</title>
+<meta name="description" content="Monitoreo en vivo de tu consumo eléctrico, control de diferenciales y notificaciones." />
+<meta name="robots" content="noindex, nofollow" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css" />
+<script>
+(function () {
+  var saved = localStorage.getItem("vatia-theme");
+  if (saved === "dark") document.documentElement.setAttribute("data-theme", "dark");
+})();
+</script>
+</head>
+<body>
+
+<div class="noise" aria-hidden="true"></div>
+
+<div class="app-shell">
+
+  <aside class="sidebar">
+    <a href="index.html" class="brand">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M13 2 4 14h6l-1 8 9-12h-6l1-8Z" fill="currentColor"/></svg>
+      </span>
+      Vatia
+    </a>
+
+    <a class="sidebar-link active" href="#resumen">
+      <svg viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.6"/><rect x="14" y="3" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.6"/><rect x="3" y="14" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.6"/><rect x="14" y="14" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.6"/></svg>
+      Resumen
+    </a>
+    <a class="sidebar-link" href="#artefactos">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M4 19V5m0 14h16M8 15l3-4 3 3 4-6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Mis artefactos
+    </a>
+    <a class="sidebar-link" href="#diferenciales">
+      <svg viewBox="0 0 24 24" fill="none"><rect x="5" y="3" width="14" height="18" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M9 8h6M9 12h6M9 16h3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      Diferenciales
+    </a>
+    <a class="sidebar-link" href="#notificaciones">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M12 3 2 20h20L12 3Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M12 10v4M12 17h.01" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      Notificaciones
+      <span id="notifBadge" class="status-pill offline"></span>
+    </a>
+    <a class="sidebar-link" href="#configuracion">
+      <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.6"/><path d="M19.4 13.5a7.6 7.6 0 0 0 0-3l2-1.5-2-3.4-2.3.9a7.6 7.6 0 0 0-2.6-1.5L14 2.5h-4l-.5 2.5a7.6 7.6 0 0 0-2.6 1.5l-2.3-.9-2 3.4 2 1.5a7.6 7.6 0 0 0 0 3l-2 1.5 2 3.4 2.3-.9c.8.65 1.65 1.15 2.6 1.5l.5 2.5h4l.5-2.5a7.6 7.6 0 0 0 2.6-1.5l2.3.9 2-3.4-2-1.5Z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>
+      Configuración
+    </a>
+
+    <div class="sidebar-foot">
+      <span id="sidebarUser">Cargando…</span><br>
+      <a href="#" id="logoutLink">Cerrar sesión</a>
+    </div>
+  </aside>
+
+  <main class="app-main">
+    <div class="app-top" id="resumen">
+      <div>
+        <h1 id="welcomeTitle">Hola 👋</h1>
+        <p>Esto es lo que está pasando en tu tablero ahora mismo.</p>
+      </div>
+      <div class="app-top-right">
+        <button type="button" class="theme-toggle sidebar-theme-toggle" id="themeToggle" aria-label="Cambiar a modo oscuro" aria-pressed="false">
+          <svg class="icon-sun" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="4.2" stroke="currentColor" stroke-width="1.6"/><path d="M12 2.5v2.4M12 19.1v2.4M4.9 4.9l1.7 1.7M17.4 17.4l1.7 1.7M2.5 12h2.4M19.1 12h2.4M4.9 19.1l1.7-1.7M17.4 6.6l1.7-1.7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+          <svg class="icon-moon" viewBox="0 0 24 24" fill="none"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4 8.5 8.5 0 1 0 20 14.5Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <section class="stat-grid" id="statGrid"></section>
+
+    <!-- ARTEFACTOS -->
+    <section class="panel" id="artefactos" style="margin-bottom:16px;">
+      <div class="panel-head">
+        <h2>Tu consumo, artefacto por artefacto, en vivo.</h2>
+        <span class="live-pill"><span class="dot dot-live"></span>En vivo</span>
+      </div>
+      <p class="section-sub" style="margin:-8px 0 20px;">Estos son los artefactos que Vatia reconoce en tu tablero ahora mismo.</p>
+
+      <div class="dash-main">
+        <div class="dash-card dash-list">
+          <div class="dash-card-head">
+            <h3>Artefactos detectados</h3>
+          </div>
+          <ul class="appliance-list" id="applianceList"></ul>
+        </div>
+
+        <div class="dash-card dash-summary">
+          <h3>Proyección del mes</h3>
+          <div class="summary-amount" id="monthTotal">$0</div>
+          <p class="summary-note">Tarifa: $195/kWh. Se ajusta a tu distribuidora cuando conectamos tu boleta real.</p>
+          <div class="summary-bars" id="summaryBars"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SIMULADOR -->
+    <section class="panel" id="simulador" style="margin-bottom:16px;">
+      <div class="panel-head">
+        <h2>Simulación rápida de 1 día</h2>
+        <span class="muted">Marca lo que usaste hoy</span>
+      </div>
+      <div class="dash-controls" id="simControls" role="group" aria-label="Simular artefactos usados hoy"></div>
+      <div class="sim-result">
+        <div>
+          <span class="sim-result-label">Costo estimado de hoy</span>
+          <div class="sim-result-amount" id="simTotal">$0</div>
+        </div>
+        <p class="sim-result-note">Estimado con horas de uso típicas por artefacto. Tu consumo real puede variar.</p>
+      </div>
+    </section>
+
+    <!-- DIFERENCIALES -->
+    <section class="panel" id="diferenciales" style="margin-bottom:16px;">
+      <div class="panel-head">
+        <h2>Diferenciales del tablero</h2>
+        <span class="muted">3 con control remoto</span>
+      </div>
+      <ul class="breaker-list" id="breakerList"></ul>
+    </section>
+
+    <!-- NOTIFICACIONES -->
+    <section class="panel" id="notificaciones" style="margin-bottom:16px;">
+      <div class="panel-head">
+        <h2>Notificaciones</h2>
+        <span class="muted" id="notifCount"></span>
+      </div>
+      <div class="alert-list" id="notifList"></div>
+    </section>
+
+    <!-- CONFIGURACION -->
+    <section class="panel" id="configuracion">
+      <div class="panel-head">
+        <h2>Configuración</h2>
+      </div>
+      <form class="settings-form" id="settingsForm">
+        <div class="settings-row">
+          <label>Nombre<input type="text" id="cfgNombre" /></label>
+          <label>Correo<input type="email" id="cfgEmail" /></label>
+        </div>
+        <div class="settings-row">
+          <label>Teléfono<input type="tel" id="cfgTelefono" /></label>
+          <label>Comuna<input type="text" id="cfgComuna" /></label>
+        </div>
+        <label class="settings-check"><input type="checkbox" id="cfgWhatsapp" checked /> Recibir reporte semanal por WhatsApp</label>
+        <label class="settings-check"><input type="checkbox" id="cfgAlertas" checked /> Alertas de sobrecarga y aparatos fallando</label>
+        <button type="submit" class="btn btn-primary">Guardar cambios</button>
+        <p class="auth-note" id="settingsNote"></p>
+      </form>
+    </section>
+
+  </main>
+</div>
+
+<script src="theme.js"></script>
+<script src="panel.js"></script>
+</body>
+</html>

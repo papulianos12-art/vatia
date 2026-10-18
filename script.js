@@ -9,6 +9,7 @@
     { id: "termo",        name: "Termo eléctrico", watts: 1500, color: "#8b7bff", hoursMonth: 45, confidence: 96 },
     { id: "lavadora",     name: "Lavadora",        watts: 500,  color: "#4fb0ff", hoursMonth: 10, confidence: 88 },
     { id: "tv",           name: "TV + cargadores", watts: 120,  color: "#ff9ed2", hoursMonth: 150, confidence: 82 },
+    { id: "cocina",       name: "Cocina eléctrica", watts: 2500, color: "#ffd166", hoursMonth: 30, confidence: 90 },
   ];
 
   const clp = (n) => "$" + Math.round(n).toLocaleString("es-CL");

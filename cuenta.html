@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Vatia — Mi cuenta</title>
+<meta name="description" content="Inicia sesión o crea tu cuenta Vatia para contratar el servicio y monitorear tu consumo." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css" />
+<script>
+(function () {
+  var saved = localStorage.getItem("vatia-theme");
+  if (saved === "dark") document.documentElement.setAttribute("data-theme", "dark");
+})();
+</script>
+</head>
+<body>
+
+<div class="noise" aria-hidden="true"></div>
+
+<header class="nav" id="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="brand">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M13 2 4 14h6l-1 8 9-12h-6l1-8Z" fill="currentColor"/></svg>
+      </span>
+      Vatia
+    </a>
+    <div class="nav-actions">
+      <button type="button" class="theme-toggle" id="themeToggle" aria-label="Cambiar a modo oscuro" aria-pressed="false">
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="4.2" stroke="currentColor" stroke-width="1.6"/><path d="M12 2.5v2.4M12 19.1v2.4M4.9 4.9l1.7 1.7M17.4 17.4l1.7 1.7M2.5 12h2.4M19.1 12h2.4M4.9 19.1l1.7-1.7M17.4 6.6l1.7-1.7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4 8.5 8.5 0 1 0 20 14.5Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+      </button>
+      <a href="index.html" class="view-switch">← Volver al sitio</a>
+    </div>
+  </div>
+</header>
+
+<main class="auth-main">
+  <div class="auth-card">
+    <div class="auth-tabs" role="tablist">
+      <button type="button" class="auth-tab" id="tabLogin" role="tab" aria-selected="true">Iniciar sesión</button>
+      <button type="button" class="auth-tab" id="tabCrear" role="tab" aria-selected="false">Crear cuenta</button>
+    </div>
+
+    <!-- LOGIN -->
+    <form class="auth-form" id="loginForm">
+      <label>Correo electrónico
+        <input type="email" name="email" placeholder="tu@correo.cl" required />
+      </label>
+      <label>Contraseña
+        <input type="password" name="password" placeholder="••••••••" required minlength="4" />
+      </label>
+      <button type="submit" class="btn btn-primary">Entrar a mi panel</button>
+      <p class="auth-note">¿Primera vez? <a href="#" id="goCrear">Crea tu cuenta</a> y contrata el servicio.</p>
+    </form>
+
+    <!-- CREAR CUENTA -->
+    <form class="auth-form" id="crearForm" hidden>
+      <label>Nombre completo
+        <input type="text" name="nombre" placeholder="Tu nombre" required />
+      </label>
+      <label>Correo electrónico
+        <input type="email" name="email" placeholder="tu@correo.cl" required />
+      </label>
+      <label>Teléfono
+        <input type="tel" name="telefono" placeholder="+56 9 ..." required />
+      </label>
+      <div class="auth-row">
+        <label>Comuna
+          <input type="text" name="comuna" placeholder="Concepción" required />
+        </label>
+        <label>Eres
+          <select name="tipo">
+            <option value="hogar">Hogar</option>
+            <option value="pyme">Pyme</option>
+          </select>
+        </label>
+      </div>
+      <label>Contraseña
+        <input type="password" name="password" placeholder="Crea una contraseña" required minlength="4" />
+      </label>
+      <button type="submit" class="btn btn-primary">Crear cuenta y empezar prueba gratis</button>
+      <p class="auth-note">Al crear tu cuenta partes con 2 semanas gratis. ¿Ya tienes cuenta? <a href="#" id="goLogin">Inicia sesión</a>.</p>
+    </form>
+
+    <p class="auth-demo-note">Esta es una demo sin backend: tus datos quedan solo en este navegador (localStorage), no se envían a ningún servidor.</p>
+  </div>
+</main>
+
+<script src="theme.js"></script>
+<script src="cuenta.js"></script>
+</body>
+</html>

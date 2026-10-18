@@ -77,9 +77,9 @@
       </div>
       <div class="app-top-right">
         <select class="period-select" id="periodSelect">
-          <option>Últimos 6 meses</option>
-          <option>Últimos 12 meses</option>
-          <option>Este año</option>
+          <option value="1m">Último mes</option>
+          <option value="3m">Últimos 3 meses</option>
+          <option value="6m" selected>Últimos 6 meses</option>
         </select>
       </div>
     </div>
@@ -107,8 +107,23 @@
     <section class="app-grid">
       <div class="panel" id="instalaciones" style="grid-column: 1 / -1;">
         <div class="panel-head">
-          <h2>Últimas instalaciones</h2>
-          <span class="muted">12 más recientes</span>
+          <h2>Instalaciones</h2>
+          <span class="muted" id="installsCount"></span>
+        </div>
+        <div class="installs-filters">
+          <input type="search" id="installSearch" placeholder="Buscar por cliente o comuna…" />
+          <select id="filterTipo">
+            <option value="">Todos los tipos</option>
+            <option value="Hogar">Hogar</option>
+            <option value="Pyme">Pyme</option>
+            <option value="Instalador">Instalador</option>
+          </select>
+          <select id="filterPlan">
+            <option value="">Todos los planes</option>
+            <option value="Comodato">Comodato</option>
+            <option value="Suscripción + equipo">Suscripción + equipo</option>
+            <option value="Alianza solar">Alianza solar</option>
+          </select>
         </div>
         <table class="data-table">
           <thead>
@@ -132,6 +147,42 @@
           <span class="muted" id="mrrTotal"></span>
         </div>
         <div class="revenue-split" id="revenueSplit"></div>
+      </div>
+    </section>
+
+    <section class="app-grid" id="config">
+      <div class="panel" style="grid-column: 1 / -1;">
+        <div class="panel-head">
+          <h2>Configuración</h2>
+        </div>
+        <form class="settings-form" id="ceoSettingsForm">
+          <div class="settings-row">
+            <label>Nombre<input type="text" id="cfgNombre" value="Matías Vargas" /></label>
+            <label>Correo<input type="email" id="cfgEmail" value="matias@vatia.cl" /></label>
+          </div>
+          <div class="settings-row">
+            <label>Rol<input type="text" id="cfgRol" value="Fundador / CEO" /></label>
+            <label>Zona horaria<input type="text" id="cfgTz" value="America/Santiago" /></label>
+          </div>
+
+          <div class="settings-divider">Apariencia</div>
+          <label class="settings-check">
+            <input type="checkbox" id="cfgDarkToggle" />
+            Usar modo oscuro
+          </label>
+
+          <div class="settings-divider">Notificaciones</div>
+          <label class="settings-check"><input type="checkbox" id="cfgNotifCrit" checked /> Avisarme de alertas críticas por correo</label>
+          <label class="settings-check"><input type="checkbox" id="cfgNotifWarn" checked /> Avisarme de alertas de advertencia</label>
+          <label class="settings-check"><input type="checkbox" id="cfgNotifWeekly" checked /> Resumen semanal del negocio</label>
+          <label class="settings-check"><input type="checkbox" id="cfgNotifChurn" /> Avisarme cuando un cliente cancele</label>
+
+          <div class="settings-divider">Equipo</div>
+          <label class="settings-check"><input type="checkbox" id="cfgTeamAccess" /> Dar acceso de solo lectura al equipo de instalación</label>
+
+          <button type="submit" class="btn btn-primary">Guardar cambios</button>
+          <p class="auth-note" id="ceoSettingsNote"></p>
+        </form>
       </div>
     </section>
 
