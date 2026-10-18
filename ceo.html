@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Vatia — Panel interno</title>
+<meta name="description" content="Panel interno de Vatia: clientes activos, ingresos recurrentes, instalaciones y alertas de la flota de sensores." />
+<meta name="robots" content="noindex, nofollow" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css" />
+<script>
+(function () {
+  var saved = localStorage.getItem("vatia-theme");
+  if (saved === "dark") document.documentElement.setAttribute("data-theme", "dark");
+})();
+</script>
+</head>
+<body>
+
+<div class="noise" aria-hidden="true"></div>
+
+<div class="app-shell">
+
+  <aside class="sidebar">
+    <a href="index.html" class="brand">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M13 2 4 14h6l-1 8 9-12h-6l1-8Z" fill="currentColor"/></svg>
+      </span>
+      Vatia <span class="view-tag ceo">CEO</span>
+    </a>
+
+    <a class="sidebar-link active" href="#">
+      <svg viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.6"/><rect x="14" y="3" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.6"/><rect x="3" y="14" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.6"/><rect x="14" y="14" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.6"/></svg>
+      Resumen
+    </a>
+    <a class="sidebar-link" href="#clientes">
+      <svg viewBox="0 0 24 24" fill="none"><circle cx="9" cy="8" r="3.2" stroke="currentColor" stroke-width="1.6"/><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M16 4.3a3.2 3.2 0 0 1 0 6.2M21.5 20c0-3-2-5.2-5-5.9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      Clientes
+    </a>
+    <a class="sidebar-link" href="#instalaciones">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M4 21V9l8-5 8 5v12" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M9 21v-7h6v7" stroke="currentColor" stroke-width="1.6"/></svg>
+      Instalaciones
+    </a>
+    <a class="sidebar-link" href="#ingresos">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M4 19V5m0 14h16M8 15l3-4 3 3 4-6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Ingresos
+    </a>
+    <a class="sidebar-link" href="#alertas">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M12 3 2 20h20L12 3Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M12 10v4M12 17h.01" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      Alertas
+      <span id="alertBadge" class="status-pill offline" style="margin-left:auto;"></span>
+    </a>
+    <a class="sidebar-link" href="#config">
+      <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.6"/><path d="M19.4 13.5a7.6 7.6 0 0 0 0-3l2-1.5-2-3.4-2.3.9a7.6 7.6 0 0 0-2.6-1.5L14 2.5h-4l-.5 2.5a7.6 7.6 0 0 0-2.6 1.5l-2.3-.9-2 3.4 2 1.5a7.6 7.6 0 0 0 0 3l-2 1.5 2 3.4 2.3-.9c.8.65 1.65 1.15 2.6 1.5l.5 2.5h4l.5-2.5a7.6 7.6 0 0 0 2.6-1.5l2.3.9 2-3.4-2-1.5Z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>
+      Configuración
+    </a>
+
+    <button type="button" class="theme-toggle sidebar-theme-toggle" id="themeToggle" aria-label="Cambiar a modo oscuro" aria-pressed="false">
+      <svg class="icon-sun" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="4.2" stroke="currentColor" stroke-width="1.6"/><path d="M12 2.5v2.4M12 19.1v2.4M4.9 4.9l1.7 1.7M17.4 17.4l1.7 1.7M2.5 12h2.4M19.1 12h2.4M4.9 19.1l1.7-1.7M17.4 6.6l1.7-1.7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <svg class="icon-moon" viewBox="0 0 24 24" fill="none"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4 8.5 8.5 0 1 0 20 14.5Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+      <span class="theme-toggle-label">Modo oscuro</span>
+    </button>
+
+    <div class="sidebar-foot">
+      Sesión de Matías V.<br>
+      <a href="index.html">← Volver a la vista cliente</a>
+    </div>
+  </aside>
+
+  <main class="app-main">
+    <div class="app-top">
+      <div>
+        <h1>Resumen del negocio</h1>
+        <p>Vista interna — flota de sensores Vatia instalados, en vivo.</p>
+      </div>
+      <div class="app-top-right">
+        <select class="period-select" id="periodSelect">
+          <option>Últimos 6 meses</option>
+          <option>Últimos 12 meses</option>
+          <option>Este año</option>
+        </select>
+      </div>
+    </div>
+
+    <section class="stat-grid" id="statGrid"></section>
+
+    <section class="app-grid">
+      <div class="panel">
+        <div class="panel-head">
+          <h2>Clientes activos por mes</h2>
+          <span class="muted">Comodato + suscripción</span>
+        </div>
+        <div class="chart" id="growthChart"></div>
+      </div>
+
+      <div class="panel" id="alertas">
+        <div class="panel-head">
+          <h2>Alertas de la flota</h2>
+          <span class="muted" id="alertCount"></span>
+        </div>
+        <div class="alert-list" id="alertList"></div>
+      </div>
+    </section>
+
+    <section class="app-grid">
+      <div class="panel" id="instalaciones" style="grid-column: 1 / -1;">
+        <div class="panel-head">
+          <h2>Últimas instalaciones</h2>
+          <span class="muted">12 más recientes</span>
+        </div>
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Cliente</th>
+              <th>Plan</th>
+              <th>Comuna</th>
+              <th>Fecha</th>
+              <th>Estado del sensor</th>
+            </tr>
+          </thead>
+          <tbody id="installsBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="app-grid" id="ingresos">
+      <div class="panel" style="grid-column: 1 / -1;">
+        <div class="panel-head">
+          <h2>Ingreso recurrente por canal</h2>
+          <span class="muted" id="mrrTotal"></span>
+        </div>
+        <div class="revenue-split" id="revenueSplit"></div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<script src="theme.js"></script>
+<script src="ceo.js"></script>
+</body>
+</html>
