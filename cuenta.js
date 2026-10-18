@@ -37,7 +37,7 @@
     let user = stored ? JSON.parse(stored) : null;
     if (!user || user.email !== email) {
       // Demo: no hay backend real, así que entramos igual con un perfil de ejemplo.
-      user = { nombre: email.split("@")[0] || "Cliente Vatia", email, telefono: "", comuna: "Concepción", tipo: "hogar", desde: new Date().toISOString() };
+      user = { nombre: email.split("@")[0] || "Cliente Vatia", email, telefono: "", comuna: "Concepción", tipo: "hogar", compania: "cge", desde: new Date().toISOString() };
     }
     goToPanel(user);
   });
@@ -51,6 +51,7 @@
       telefono: fd.get("telefono"),
       comuna: fd.get("comuna"),
       tipo: fd.get("tipo"),
+      compania: fd.get("compania"),
       desde: new Date().toISOString(),
     };
     goToPanel(user);
