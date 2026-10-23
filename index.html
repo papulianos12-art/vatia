@@ -1,360 +1,383 @@
 <!doctype html>
-<html lang="es">
+<html lang="es-CL">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Vatia — Sabe en qué se te va la luz</title>
-<meta name="description" content="Vatia es un sensor no invasivo para tu tablero eléctrico que identifica cada artefacto encendido y te muestra el consumo en pesos, en tiempo real." />
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Vatia · Cada aparato de tu casa, en pesos</title>
+<meta name="description" content="Vatia: un sensor en el tablero que reconoce cada aparato de tu casa y te dice cuánto cuesta, en pesos y en vivo.">
+<meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#151D24" media="(prefers-color-scheme: dark)">
+<link rel="canonical" href="https://vatia.cl/">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="es_CL">
+<meta property="og:title" content="Vatia · Cada aparato, en pesos">
+<meta property="og:description" content="Un sensor en el tablero eléctrico que te muestra cuánto gasta cada aparato, en kW y en pesos, en tiempo real.">
+<meta property="og:url" content="https://vatia.cl/">
+<script>
+  /* Aplica el tema guardado antes de pintar, para que no parpadee. */
+  try { var t = JSON.parse(localStorage.getItem('vatia.theme')); if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t; } catch (e) {}
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css" />
-<script>
-(function () {
-  var saved = localStorage.getItem("vatia-theme");
-  if (saved === "dark") document.documentElement.setAttribute("data-theme", "dark");
-})();
-</script>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Semi+Condensed:wght@600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<link rel="stylesheet" href="assets/styles.css">
 </head>
 <body>
+<a class="skip" href="#contenido">Saltar al contenido</a>
 
-<div class="noise" aria-hidden="true"></div>
-
-<header class="nav" id="nav">
-  <div class="nav-inner">
-    <a href="#top" class="brand">
-      <span class="brand-mark" aria-hidden="true">
-        <svg viewBox="0 0 24 24" fill="none"><path d="M13 2 4 14h6l-1 8 9-12h-6l1-8Z" fill="currentColor"/></svg>
-      </span>
-      Vatia
-    </a>
-    <nav class="nav-links" aria-label="Navegación principal">
-      <a href="#problema">El problema</a>
-      <a href="#como-funciona">Cómo funciona</a>
-      <a href="#dashboard">Dashboard</a>
-      <a href="#comparacion">Comparación</a>
-      <a href="#precio">Precio</a>
-      <a href="#seguridad">Seguridad</a>
+<header class="topbar">
+  <div class="topbar-in">
+    <a class="wordmark" href="#inicio" aria-label="Vatia, inicio" translate="no">Vati<b>a</b></a>
+    <nav class="mainnav" aria-label="Secciones">
+      <a href="#inicio" data-route="inicio"><svg class="i" data-icon="home"></svg>Inicio</a>
+      <a href="#casa" data-route="casa"><svg class="i" data-icon="bolt"></svg>Mi casa</a>
+      <a href="#ceo" data-route="ceo"><svg class="i" data-icon="grid"></svg>Panel CEO</a>
+      <a href="#seguridad" data-route="seguridad"><svg class="i" data-icon="shield"></svg>Seguridad</a>
     </nav>
-    <div class="nav-actions">
-      <button type="button" class="theme-toggle" id="themeToggle" aria-label="Cambiar a modo oscuro" aria-pressed="false">
-        <svg class="icon-sun" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="4.2" stroke="currentColor" stroke-width="1.6"/><path d="M12 2.5v2.4M12 19.1v2.4M4.9 4.9l1.7 1.7M17.4 17.4l1.7 1.7M2.5 12h2.4M19.1 12h2.4M4.9 19.1l1.7-1.7M17.4 6.6l1.7-1.7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
-        <svg class="icon-moon" viewBox="0 0 24 24" fill="none"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4 8.5 8.5 0 1 0 20 14.5Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
-      </button>
-      <a href="cuenta.html" class="view-switch">
-        <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="3.4" stroke="currentColor" stroke-width="1.6"/><path d="M5 20c0-3.6 3.1-6 7-6s7 2.4 7 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
-        Iniciar sesión
-      </a>
-      <a href="cuenta.html#crear" class="btn btn-small">Contratar</a>
+    <div class="topbar-end">
+      <span class="alpha-tag" title="Versión alfa: todo lo que ves son datos de ejemplo">Alfa · datos de ejemplo</span>
+      <a class="btn btn-primary btn-small top-cta" href="#piloto">Pedir el piloto</a>
+      <button class="iconbtn" id="themeBtn" type="button" aria-label="Cambiar tema"><svg class="i" data-icon="moon"></svg></button>
     </div>
   </div>
 </header>
 
-<main id="top">
+<div id="contenido" tabindex="-1"></div>
 
-  <!-- HERO -->
-  <section class="hero">
-    <div class="hero-inner">
-      <h1>Sabe exactamente <span class="accent">en qué se te va la luz.</span></h1>
-      <p class="hero-sub">
-        Vatia se instala en tu tablero en minutos, sin tocar enchufes ni cambiar nada.
-        Identifica cada artefacto por su huella eléctrica y te muestra el gasto de cada uno,
-        en pesos, en tiempo real. Monitoreo no invasivo, hecho para tableros y tarifas chilenas.
-      </p>
-      <div class="hero-cta">
-        <a href="cuenta.html#crear" class="btn btn-primary">Quiero instalarlo</a>
-        <a href="#como-funciona" class="btn btn-ghost">Ver cómo funciona</a>
-      </div>
-      <div class="hero-trust">
-        <span><svg viewBox="0 0 24 24" fill="none"><path d="M12 2 4 5v6c0 5 3.4 8.7 8 10 4.6-1.3 8-5 8-10V5l-8-3Z" stroke="currentColor" stroke-width="1.6"/></svg> Datos cifrados</span>
-        <span><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/><path d="M8 12.5 11 15l5-6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> Instalación por electricista SEC</span>
-        <span><svg viewBox="0 0 24 24" fill="none"><path d="M12 21s-7-4.4-7-10.5A5 5 0 0 1 12 5a5 5 0 0 1 7 5.5C19 16.6 12 21 12 21Z" stroke="currentColor" stroke-width="1.6"/></svg> Tarifa chilena real</span>
-      </div>
-    </div>
+<!-- ===================== INICIO ===================== -->
+<main class="view" id="view-inicio" data-view="inicio">
 
-    <div class="hero-visual" aria-hidden="true">
-      <div class="panel-card">
-        <div class="panel-card-head">
-          <span class="dot dot-live"></span> Tablero en vivo
+  <section class="ch ch-amber hero" aria-labelledby="hero-h">
+    <div class="ch-in">
+      <div class="hero-copy">
+        <h1 id="hero-h"><span class="l1">Cada aparato,</span> <span>en pesos.</span></h1>
+        <p class="hero-lead">Vatia se instala en el tablero de tu casa, reconoce cada aparato por su huella eléctrica y te muestra en vivo cuánto te está costando.</p>
+        <div class="hero-actions">
+          <a class="btn btn-dark btn-big" href="#piloto">Pedir el piloto</a>
+          <a class="btn btn-line btn-big" href="#casa">Ver la demo de una casa</a>
         </div>
-        <div class="panel-rows" id="heroRows">
-          <!-- filled by JS -->
-        </div>
-        <div class="panel-total">
-          <span>Total del día</span>
-          <strong id="heroTotal">$0</strong>
-        </div>
+        <ul class="hero-meta" aria-label="Datos técnicos">
+          <li>Hecho para tableros chilenos</li><li>220 V · 50 Hz</li><li>Concepción, 2026</li>
+        </ul>
       </div>
+
+      <aside class="live-card" aria-labelledby="lc-h">
+        <div class="lc-head">
+          <h2 id="lc-h"><span class="live-dot" aria-hidden="true"></span>Hogar de ejemplo, en vivo</h2>
+          <span class="lc-tag">Datos de ejemplo</span>
+        </div>
+        <div class="lc-figs">
+          <div><span>Consumo ahora</span><b class="num" id="hNow">0 W</b></div>
+          <div><span>Gasto de hoy</span><b class="num" id="hToday">$0</b></div>
+        </div>
+        <ul class="lc-list" id="hList"></ul>
+        <div class="lc-amp">
+          <div><span>Automático general</span><b class="num" id="hAmp">0 / 25 A</b></div>
+          <div class="meter"><i id="hAmpBar"></i></div>
+          <p id="hAmpNote">Si la casa se acerca a 25 A, Vatia pausa el termo unos minutos.</p>
+        </div>
+        <a class="lc-link" href="#casa">Abrir Mi casa <svg class="i" data-icon="arrow"></svg></a>
+      </aside>
     </div>
   </section>
 
-  <!-- PROBLEMA -->
-  <section class="section" id="problema">
-    <div class="section-head">
-      <h2>La cuenta sube y nadie sabe por qué.</h2>
-    </div>
-    <div class="grid-3">
-      <div class="card">
-        <h3>El medidor solo da el total</h3>
-        <p>La distribuidora te dice cuánto gastaste en el mes, nunca qué aparato se lo llevó. Para cuando llega la boleta, ya es tarde para cambiar algo.</p>
-      </div>
-      <div class="card">
-        <h3>Los enchufes inteligentes no alcanzan</h3>
-        <p>Una estufa empotrada, un termo o una cocina eléctrica no se pueden enchufar a un Shelly. Necesitarías uno por aparato, y los grandes quedan afuera.</p>
-      </div>
-      <div class="card">
-        <h3>Lo que existe afuera, no es de acá</h3>
-        <p>Sense y productos similares están pensados para 120/240V a 60Hz. Nuestra red es 220V monofásica a 50Hz, con otros aparatos y otra tarifa.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- COMO FUNCIONA -->
-  <section class="section section-alt" id="como-funciona">
-    <div class="section-head">
-      <h2>Un sensor en el tablero. Nada que instalar en cada aparato.</h2>
-    </div>
-
-    <div class="how-grid">
-      <figure class="how-photo">
-        <img src="assets/images/panel-switch-box.jpg" alt="Interruptor automático industrial en un tablero eléctrico" loading="lazy" width="1600" height="1200" />
-        <figcaption>La pinza se abre alrededor del cable, sin cortar ni desconectar nada.</figcaption>
-      </figure>
-
-      <ul class="how-list">
-        <li>
-          <h3>Instalación de 10 minutos</h3>
-          <p>Una pinza no invasiva se abre alrededor del cable principal o de cada circuito del tablero. No se corta ni se desconecta nada.</p>
-        </li>
-        <li>
-          <h3>Lee la firma eléctrica</h3>
-          <p>Cada vez que algo se prende o se apaga, el sensor mide el salto de potencia, su forma y sus armónicos: la huella única de ese aparato.</p>
-        </li>
-        <li>
-          <h3>Identifica en 1-2 segundos</h3>
-          <p>Un modelo entrenado con huellas de aparatos chilenos reconoce qué se encendió: hervidor, refrigerador, estufa, termo, lavadora.</p>
-        </li>
-        <li>
-          <h3>Te lo muestra en pesos</h3>
-          <p>La app traduce todo a tu tarifa real: cuánto va cada aparato en el mes y qué conviene cambiar para bajar la cuenta.</p>
-        </li>
-      </ul>
-    </div>
-  </section>
-
-  <!-- DASHBOARD DEMO -->
-  <section class="section" id="dashboard">
-    <div class="section-head">
-      <h2>Tu consumo, artefacto por artefacto, en vivo.</h2>
-      <p class="section-sub">Esta es una simulación con datos de ejemplo. Prende un aparato y mira cómo reacciona.</p>
-    </div>
-
-    <div class="dash">
-      <div class="dash-controls" id="dashControls" role="group" aria-label="Simular artefactos"></div>
-
-      <div class="dash-main">
-        <div class="dash-card dash-list">
-          <div class="dash-card-head">
-            <h3>Artefactos detectados</h3>
-            <span class="live-pill"><span class="dot dot-live"></span>En vivo</span>
+  <section class="split" aria-labelledby="split-h">
+    <div class="ch-in split-in">
+      <div class="split-copy">
+        <h2 id="split-h">Tu boleta, por dentro</h2>
+        <p>La distribuidora te dice cuánto pagas. No te dice en qué. Escribe el total de tu última boleta y mira cómo se repartiría en una casa típica con estufa eléctrica y termo.</p>
+        <div class="bill-in">
+          <label for="billInput">Total de tu última boleta</label>
+          <div class="bill-total"><span aria-hidden="true">$</span><input id="billInput" inputmode="numeric" autocomplete="off" value="60.650" aria-describedby="billNote"></div>
+          <div class="bill-chips" role="group" aria-label="Ejemplos de boleta">
+            <button type="button" data-bill="38000" aria-pressed="false">$38.000</button>
+            <button type="button" data-bill="60650" aria-pressed="true">$60.650</button>
+            <button type="button" data-bill="95000" aria-pressed="false">$95.000</button>
           </div>
-          <ul class="appliance-list" id="applianceList"></ul>
+          <p class="bill-note" id="billNote">Reparto estimado de una casa de ejemplo, con tarifa BT1 de $257/kWh.</p>
         </div>
-
-        <div class="dash-card dash-summary">
-          <h3>Proyección del mes</h3>
-          <div class="summary-amount" id="monthTotal">$0</div>
-          <p class="summary-note">Tarifa de ejemplo: $195/kWh. Con datos reales, este número se ajusta a tu distribuidora.</p>
-          <div class="summary-bars" id="summaryBars"></div>
-        </div>
+      </div>
+      <div class="breakdown" aria-live="polite">
+        <h3>Lo que Vatia te mostraría</h3>
+        <p class="sub">Reparto estimado por aparato</p>
+        <ul class="bd-list" id="bdList"></ul>
+        <div class="bd-foot"><span>Total</span><span class="num" id="bdTotal">$60.650</span></div>
+        <p class="bd-tip" id="bdTip"></p>
       </div>
     </div>
   </section>
 
-  <!-- COMPARACION -->
-  <section class="section section-alt" id="comparacion">
-    <div class="section-head">
-      <h2>Ya existe afuera. Para Chile, no existía.</h2>
-    </div>
-
-    <div class="table-wrap">
-      <table class="compare">
-        <thead>
-          <tr>
-            <th></th>
-            <th>Enchufe inteligente</th>
-            <th>Medidor de la distribuidora</th>
-            <th>Sense (EE.UU.)</th>
-            <th class="col-vatia"><span class="col-vatia-badge">Vatia</span></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>Identifica cada aparato</td>
-            <td class="no"><i class="cell-icon cell-no">✕</i>Solo el que enchufas</td>
-            <td class="no"><i class="cell-icon cell-no">✕</i>No</td>
-            <td class="maybe"><i class="cell-icon cell-maybe">~</i>Sí, en EE.UU.</td>
-            <td class="yes col-vatia"><i class="cell-icon cell-yes">✓</i>Sí</td>
-          </tr>
-          <tr>
-            <td>Sirve en tableros de 220V</td>
-            <td class="yes"><i class="cell-icon cell-yes">✓</i>Sí</td>
-            <td class="yes"><i class="cell-icon cell-yes">✓</i>Sí</td>
-            <td class="no"><i class="cell-icon cell-no">✕</i>No validado</td>
-            <td class="yes col-vatia"><i class="cell-icon cell-yes">✓</i>Sí</td>
-          </tr>
-          <tr>
-            <td>Tarifa chilena en pesos</td>
-            <td class="no"><i class="cell-icon cell-no">✕</i>No</td>
-            <td class="no"><i class="cell-icon cell-no">✕</i>No</td>
-            <td class="no"><i class="cell-icon cell-no">✕</i>No</td>
-            <td class="yes col-vatia"><i class="cell-icon cell-yes">✓</i>Sí</td>
-          </tr>
-          <tr>
-            <td>Un aparato grande (estufa, termo)</td>
-            <td class="no"><i class="cell-icon cell-no">✕</i>No se puede enchufar</td>
-            <td class="no"><i class="cell-icon cell-no">✕</i>No</td>
-            <td class="maybe"><i class="cell-icon cell-maybe">~</i>Parcial</td>
-            <td class="yes col-vatia"><i class="cell-icon cell-yes">✓</i>Sí</td>
-          </tr>
-          <tr>
-            <td>Costo aproximado</td>
-            <td>$15.000–25.000 c/u</td>
-            <td>Incluido, sin detalle</td>
-            <td>~US$230 + envío</td>
-            <td class="yes col-vatia">Prueba gratis, desde $2.990/mes</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </section>
-
-  <!-- PRECIO -->
-  <section class="section" id="precio">
-    <div class="section-head">
-      <h2>Partes gratis. Después, un precio fijo.</h2>
-      <p class="section-sub">El equipo y la instalación los ponemos nosotros. Tú solo pagas la mensualidad, y puedes cancelar cuando quieras.</p>
-    </div>
-
-    <div class="price-timeline">
-      <div class="price-stage">
-        <div class="price-stage-period">Primeras 2 semanas</div>
-        <div class="price-stage-amount">Gratis</div>
-        <p>Prueba completa, sin tarjeta ni contrato. Si no te convence, pasamos a retirar el equipo.</p>
+  <section class="feat" aria-labelledby="board-h">
+    <div class="feat-grid">
+      <div class="tile t-head">
+        <h2 id="board-h">Lo que ves en la app</h2>
+        <p>Todo lo que pasa en tu tablero, dicho en pesos y en palabras simples.</p>
+        <a class="link-arrow" href="#casa">Abrir la demo <svg class="i" data-icon="arrow"></svg></a>
       </div>
-      <div class="price-stage">
-        <div class="price-stage-period">Meses 1 a 3</div>
-        <div class="price-stage-amount">$2.990<span>/mes</span></div>
-        <p>Precio de lanzamiento mientras afinamos el reconocimiento de artefactos con los datos de tu tablero.</p>
+      <div class="tile t-app">
+        <div class="frag frag-rows" aria-hidden="true">
+          <div class="ui-row"><i style="background:var(--s4)"></i><div><b>Estufa eléctrica</b><small>Living y dormitorios</small></div><div class="w">2.000 W</div><span class="p">Encendida</span></div>
+          <div class="ui-row"><i style="background:var(--s5)"></i><div><b>Termo eléctrico</b><small>Circuito propio</small></div><div class="w">1.500 W</div><span class="p">Encendido</span></div>
+        </div>
+        <div class="cap"><h3>Cada aparato, en vivo</h3><p>Reconoce estufa, termo, hervidor y refrigerador por su huella eléctrica.</p></div>
       </div>
-      <div class="price-stage price-stage-featured">
-        <div class="price-stage-period">Desde el mes 4</div>
-        <div class="price-stage-amount">$3.990<span>/mes</span></div>
-        <p>Precio normal para hogares. Incluye el equipo, la instalación y el soporte.</p>
+      <div class="tile t-amp">
+        <div class="frag frag-meter" aria-hidden="true"><div class="lbl num">17,4<small> / 25 A</small></div><div class="bar"><i></i></div></div>
+        <div class="cap"><h3>Que no salte el automático</h3><p>Si te acercas al límite, pausa el termo unos minutos.</p></div>
       </div>
-    </div>
-
-    <div class="price-pyme">
-      <div class="price-pyme-text">
-        <h3>¿Eres pyme?</h3>
-        <p>Un almacén, panadería o taller consume más y suele necesitar medir varios circuitos, así que el valor mensual es un poco mayor desde el mes 4. La prueba de 2 semanas y el precio de lanzamiento aplican igual.</p>
+      <div class="tile t-peso">
+        <div class="frag frag-fig num" aria-hidden="true">$1.694</div>
+        <div class="cap"><h3>Gasto de hoy</h3><p>En pesos, con tu tarifa.</p></div>
       </div>
-      <div class="price-pyme-amounts">
-        <div><span>Meses 1 a 3</span><strong>$3.990<small>/mes</small></strong></div>
-        <div><span>Desde el mes 4</span><strong>$5.990<small>/mes</small></strong></div>
+      <div class="tile t-tog">
+        <div class="frag frag-tog" aria-hidden="true"><span>Termo</span><span class="sw"></span></div>
+        <div class="cap"><h3>Control desde el celular</h3><p>Programa el termo o apágalo.</p></div>
+      </div>
+      <div class="tile t-alert">
+        <div class="frag frag-alert" aria-hidden="true"><b><em>Falla</em> Refrigerador +30%</b><span>Trabaja más que el mes pasado. Revisa el sello de la puerta.</span></div>
+        <div class="cap"><h3>Avisos antes de que algo falle</h3><p>Compara cada aparato con su propio historial.</p></div>
+      </div>
+      <div class="tile t-pay">
+        <div class="frag frag-pay" aria-hidden="true">Pagar en CGE <svg class="i" data-icon="external"></svg></div>
+        <div class="cap"><h3>Paga en el sitio oficial</h3><p>Vatia nunca pide tu tarjeta.</p></div>
+      </div>
+      <div class="tile t-cut">
+        <div class="frag frag-cut num" aria-hidden="true">03:12<small>42 min sin luz</small></div>
+        <div class="cap"><h3>Registro de cortes</h3><p>Respaldo para reclamar.</p></div>
+      </div>
+      <div class="tile t-ceo">
+        <div class="frag frag-spark" aria-hidden="true"><svg viewBox="0 0 300 80"><path d="M0 62 C30 60 40 40 70 46 S110 64 140 50 S190 10 220 18 S270 52 300 40" fill="none" stroke="var(--f-amber)" stroke-width="4" stroke-linecap="round"/><circle cx="300" cy="40" r="6" fill="var(--f-amber)"/></svg></div>
+        <div class="cap"><h3>Para pymes con varios locales</h3><p>Un panel con todos los locales y sus alertas.</p></div>
       </div>
     </div>
   </section>
 
-  <!-- SEGURIDAD -->
-  <section class="section section-alt" id="seguridad">
-    <div class="section-head">
-      <h2>Seguro, privado y certificado.</h2>
-    </div>
-
-    <div class="trust-split">
-      <figure class="trust-photo">
-        <img src="assets/images/panel-wall-mounted.jpg" alt="Tablero eléctrico moderno con interruptores automáticos rotulados" loading="lazy" width="1600" height="1067" />
-        <figcaption>Así queda tu tablero: ordenado, rotulado y certificado por un instalador SEC.</figcaption>
-      </figure>
-
-      <dl class="trust-facts">
-        <div>
-          <dt>Cifrado de extremo a extremo</dt>
-          <dd>Los datos de consumo viajan y se guardan cifrados. Nada se vende a terceros sin tu permiso explícito.</dd>
-        </div>
-        <div>
-          <dt>Instalación certificada SEC</dt>
-          <dd>Tu tablero lo abre siempre un instalador eléctrico autorizado por la Superintendencia de Electricidad y Combustibles.</dd>
-        </div>
-        <div>
-          <dt>Cumplimiento de la ley de datos personales</dt>
-          <dd>Saber a qué hora prende un aparato es un dato sensible. Lo tratamos según la nueva ley chilena de protección de datos, sin excepciones.</dd>
-        </div>
-        <div>
-          <dt>Sin cámaras, sin micrófonos</dt>
-          <dd>Solo medimos corriente y voltaje en el tablero. Nunca vemos ni escuchamos dentro de tu casa.</dd>
-        </div>
-      </dl>
+  <section class="ch ch-paper how" aria-labelledby="how-h">
+    <div class="ch-in">
+      <h2 id="how-h">Así llega a tu casa</h2>
+      <ol class="steps">
+        <li class="step s-a"><div class="bar-seg"><strong>20 minutos</strong></div><p>Primero, un técnico pone las pinzas en el tablero. No se corta ningún cable.</p></li>
+        <li class="step s-b"><div class="bar-seg"><strong>Unos 7 días</strong></div><p>Después, Vatia aprende la huella de cada aparato de tu casa.</p></li>
+        <li class="step s-c"><div class="bar-seg"><strong>Todos los días</strong></div><p>Desde ahí, ves el gasto en pesos, recibes avisos y controlas el termo.</p></li>
+      </ol>
     </div>
   </section>
 
-  <!-- CONTACTO / CTA -->
-  <section class="section section-alt cta" id="contacto">
-    <div class="cta-inner">
-      <h2>Partamos con tu tablero.</h2>
-      <p>Cuéntanos quién eres y qué necesitas. Te contactamos para coordinar la instalación o resolver tus dudas.</p>
-      <form class="cta-form" id="ctaForm">
-        <input type="text" name="nombre" placeholder="Nombre completo" required />
-        <input type="tel" name="telefono" placeholder="Teléfono (+56 9 ...)" required />
-        <input type="email" name="email" placeholder="Correo electrónico" required />
-        <select name="tipo">
-          <option value="hogar">Soy un hogar</option>
-          <option value="pyme">Tengo una pyme</option>
-          <option value="instalador">Soy instalador solar</option>
-        </select>
-        <select name="servicio">
-          <option value="instalacion">Me interesa instalar Vatia</option>
-          <option value="cotizacion">Quiero una cotización</option>
-          <option value="alianza">Alianza / instalador</option>
-          <option value="soporte">Soporte a un equipo existente</option>
-          <option value="otro">Otra consulta</option>
-        </select>
-        <textarea name="mensaje" placeholder="Cuéntanos tu caso (opcional)" rows="3"></textarea>
-        <button type="submit" class="btn btn-primary">Enviar</button>
+  <section class="ch ch-blue pricing" id="precios" aria-labelledby="price-h">
+    <div class="ch-in">
+      <h2 id="price-h">Todo Vatia, por un precio fijo al mes.</h2>
+      <p class="price-lead">Sensor, instalación y app incluidos, en comodato y sin pago inicial.</p>
+      <div class="plans">
+        <article class="plan" aria-labelledby="plan-hogar">
+          <h3 id="plan-hogar">Hogar</h3>
+          <p class="plan-price"><span class="num">$3.990</span> al mes</p>
+          <ul>
+            <li><svg class="i" data-icon="check"></svg>Cada aparato de tu casa, en pesos y en vivo</li>
+            <li><svg class="i" data-icon="check"></svg>Control del termo para que no salte el automático</li>
+            <li><svg class="i" data-icon="check"></svg>Avisos de fallas, cortes y consumo fantasma</li>
+            <li><svg class="i" data-icon="check"></svg>Enlace al pago oficial de tu distribuidora</li>
+          </ul>
+          <a class="btn btn-primary btn-big" href="#piloto" data-plan="Hogar">Pedir el piloto para mi casa</a>
+        </article>
+        <article class="plan" aria-labelledby="plan-pyme">
+          <h3 id="plan-pyme">Pyme</h3>
+          <p class="plan-price"><span class="num">$9.990</span> al mes</p>
+          <ul>
+            <li><svg class="i" data-icon="check"></svg>Todo lo del plan Hogar</li>
+            <li><svg class="i" data-icon="check"></svg>Un panel con todos tus locales y sus alertas</li>
+            <li><svg class="i" data-icon="check"></svg>Aviso si la refrigeración empieza a fallar</li>
+            <li><svg class="i" data-icon="check"></svg>Para almacenes, panaderías y talleres</li>
+          </ul>
+          <a class="btn btn-onblue btn-big" href="#piloto" data-plan="Pyme">Pedir el piloto para mi pyme</a>
+        </article>
+      </div>
+      <p class="price-note">Precios a validar en el piloto.</p>
+    </div>
+  </section>
+
+  <section class="ch ch-paper faq" aria-labelledby="faq-h">
+    <div class="ch-in faq-in">
+      <h2 id="faq-h">Preguntas</h2>
+      <div class="faq-list">
+        <details open><summary>¿Hay que cortar cables?<svg class="i" data-icon="plus"></svg></summary><p>No. Las pinzas abrazan el cable de cada circuito por fuera. Igual lo instala un técnico autorizado SEC, porque hay que abrir el tablero.</p></details>
+        <details><summary>¿Cómo sabe qué aparato es?<svg class="i" data-icon="plus"></svg></summary><p>Cada aparato tiene una huella eléctrica: cuánto consume, cómo parte y la forma de su corriente. Un hervidor salta de golpe a 2.000 W; un televisor gasta poco, pero con una corriente distinta. Vatia aprende las huellas de tu casa en la primera semana.</p></details>
+        <details><summary>¿Qué pasa con mis datos?<svg class="i" data-icon="plus"></svg></summary><p>Tu consumo dice cuándo hay gente en casa, así que lo tratamos como dato sensible: cifrado, solo tú ves el detalle y nunca se vende. Lo explicamos completo en <a href="#seguridad">Seguridad</a>.</p></details>
+        <details><summary>¿Vatia cobra mi cuenta de luz?<svg class="i" data-icon="plus"></svg></summary><p>No. Te muestra cuánto vas a pagar y te lleva al sitio oficial de tu distribuidora para pagar. Vatia nunca te va a pedir datos de tu tarjeta.</p></details>
+        <details><summary>¿Y si se corta internet o la luz?<svg class="i" data-icon="plus"></svg></summary><p>El equipo guarda las mediciones y las envía cuando vuelve la conexión. Si se corta la luz, registra la hora y la duración del corte.</p></details>
+      </div>
+    </div>
+  </section>
+
+  <section class="ch ch-ink cta" id="piloto" aria-labelledby="cta-h">
+    <div class="ch-in cta-in">
+      <div>
+        <h2 id="cta-h">Pide el piloto</h2>
+        <p class="cta-lead">Estamos instalando los primeros equipos en el Gran Concepción. Dinos dónde estás y te avisamos cuando lleguemos.</p>
+      </div>
+      <form id="ctaForm" class="cta-form" novalidate>
+        <fieldset class="seg">
+          <legend>Es para</legend>
+          <label><input type="radio" name="tipo" value="Hogar" checked><span>Mi casa</span></label>
+          <label><input type="radio" name="tipo" value="Pyme"><span>Mi pyme</span></label>
+        </fieldset>
+        <div class="fld">
+          <label for="comuna">Comuna</label>
+          <input id="comuna" name="comuna" list="comunas" placeholder="Por ejemplo, Concepción…" spellcheck="false" autocomplete="address-level2" aria-describedby="ctaAfter">
+          <datalist id="comunas"><option value="Concepción"><option value="San Pedro de la Paz"><option value="Talcahuano"><option value="Chiguayante"><option value="Hualpén"><option value="Penco"><option value="Coronel"><option value="Los Ángeles"></datalist>
+        </div>
+        <button class="btn btn-primary btn-big" type="submit">Pedir el piloto</button>
+        <p class="after" id="ctaAfter" aria-live="polite">Es una alfa: lo que escribas queda solo en esta página, no se envía ni se guarda.</p>
       </form>
-      <p class="cta-note" id="ctaNote" aria-live="polite"></p>
     </div>
   </section>
 
+  <footer class="foot">
+    <div class="ch-in foot-in">
+      <div class="foot-brand">
+        <a class="wordmark" href="#inicio" translate="no">Vati<b>a</b></a>
+        <p>Proyecto de estudiantes de Ingeniería Civil Eléctrica de la Universidad de Concepción, programa Despega de Gearbox.</p>
+      </div>
+      <nav aria-label="Demo">
+        <h2>Demo</h2>
+        <a href="#casa">Mi casa</a><a href="#ceo">Panel CEO</a><a href="#casa-pagar">Pagar mi cuenta</a>
+      </nav>
+      <nav aria-label="Confianza">
+        <h2>Confianza</h2>
+        <a href="#seguridad">Seguridad y privacidad</a><a href="https://www.bcn.cl/balance-legislativo/detalle/ficha_LEY_21719_2024-12-13" target="_blank" rel="noopener">Ley 21.719</a>
+      </nav>
+      <p class="foot-note">Alfa 0.1 · octubre 2026. Todo lo que ves en Mi casa y en el Panel CEO son datos de ejemplo.</p>
+    </div>
+  </footer>
 </main>
 
-<footer class="footer">
-  <div class="footer-inner">
-    <div class="footer-top">
-      <div class="brand">
-        <span class="brand-mark" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none"><path d="M13 2 4 14h6l-1 8 9-12h-6l1-8Z" fill="currentColor"/></svg>
-        </span>
-        Vatia
-      </div>
-      <div class="footer-contact">
-        <a href="tel:+56912345678">
-          <svg viewBox="0 0 24 24" fill="none"><path d="M4 5c0-1 .8-2 2-2h2l2 5-2 1.5c.8 2 2.2 3.4 4 4.2L13.5 12l5 2v2c0 1.2-1 2-2 2-7 0-12.5-5.5-12.5-13Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
-          +56 9 1234 5678
-        </a>
-        <a href="mailto:contacto@vatia.cl">
-          <svg viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="m4 7 8 6 8-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          contacto@vatia.cl
-        </a>
-      </div>
-    </div>
-    <p>Monitoreo eléctrico no invasivo, hecho para tableros y tarifas chilenas.</p>
-    <p class="footer-fine">Teléfono y correo son datos de ejemplo mientras definimos el canal oficial. Los montos y datos de consumo de esta página también son de ejemplo, con fines de demostración.</p>
+<!-- ===================== MI CASA ===================== -->
+<main class="view" id="view-casa" data-view="casa" hidden>
+  <div class="app">
+    <nav class="rail" role="tablist" aria-label="Mi casa" id="casaRail">
+      <div class="who"><b>Hogar de ejemplo</b><span>Concepción · CGE · plan Hogar</span></div>
+      <button role="tab" data-pane="resumen" aria-selected="true"><svg class="i" data-icon="gauge"></svg>Resumen</button>
+      <button role="tab" data-pane="aparatos" aria-selected="false"><svg class="i" data-icon="plug"></svg>Aparatos</button>
+      <button role="tab" data-pane="ahorro" aria-selected="false"><svg class="i" data-icon="leaf"></svg>Ahorro</button>
+      <button role="tab" data-pane="avisos" aria-selected="false"><svg class="i" data-icon="bell"></svg>Avisos <span class="badge" id="unreadBadge">3</span></button>
+      <button role="tab" data-pane="pagar" aria-selected="false"><svg class="i" data-icon="card"></svg>Pagar</button>
+      <button role="tab" data-pane="ajustes" aria-selected="false"><svg class="i" data-icon="sliders"></svg>Ajustes</button>
+      <div class="rail-foot">Simulación en vivo. 1 segundo aquí son 30 segundos reales.</div>
+    </nav>
+    <div class="work" id="casaWork"></div>
   </div>
-</footer>
+</main>
 
-<script src="theme.js"></script>
-<script src="script.js"></script>
+<!-- ===================== PANEL CEO ===================== -->
+<main class="view" id="view-ceo" data-view="ceo" hidden>
+  <div class="app">
+    <nav class="rail" role="tablist" aria-label="Panel CEO" id="ceoRail">
+      <div class="who"><b>Operación Vatia</b><span>Piloto Gran Concepción</span></div>
+      <button role="tab" data-pane="general" aria-selected="true"><svg class="i" data-icon="grid"></svg>General</button>
+      <button role="tab" data-pane="clientes" aria-selected="false"><svg class="i" data-icon="users"></svg>Clientes</button>
+      <button role="tab" data-pane="equipos" aria-selected="false"><svg class="i" data-icon="cpu"></svg>Equipos</button>
+      <button role="tab" data-pane="negocio" aria-selected="false"><svg class="i" data-icon="chart"></svg>Negocio</button>
+      <div class="rail-foot">Clientes seudonimizados. Datos de ejemplo.</div>
+    </nav>
+    <div class="work" id="ceoWork"></div>
+  </div>
+</main>
+
+<!-- ===================== SEGURIDAD ===================== -->
+<main class="view" id="view-seguridad" data-view="seguridad" hidden>
+  <div class="doc">
+    <nav class="doc-toc" aria-label="En esta página">
+      <a href="#seguridad" data-jump="s-datos">Qué datos usamos</a>
+      <a href="#seguridad" data-jump="s-no">Lo que nunca hacemos</a>
+      <a href="#seguridad" data-jump="s-como">Cómo los protegemos</a>
+      <a href="#seguridad" data-jump="s-derechos">Tus derechos</a>
+      <a href="#seguridad" data-jump="s-pagos">Pagos</a>
+      <a href="#seguridad" data-jump="s-alfa">Esta alfa</a>
+      <a href="#seguridad" data-jump="s-beta">Camino a la beta</a>
+    </nav>
+    <article>
+      <h1>Seguridad y privacidad</h1>
+      <p class="lede">El consumo eléctrico de una casa dice a qué hora despiertas, cuándo sales y cuándo no hay nadie. Por eso en Vatia lo tratamos como un dato sensible desde el primer día.</p>
+      <ul class="promise">
+        <li><svg class="i" data-icon="lock"></svg><span><b>Cifrado</b> del tablero a la nube y guardado.</span></li>
+        <li><svg class="i" data-icon="users"></svg><span><b>Solo tú</b> ves el detalle de tu casa.</span></li>
+        <li><svg class="i" data-icon="card"></svg><span><b>Nunca</b> pedimos datos de tu tarjeta.</span></li>
+        <li><svg class="i" data-icon="shield"></svg><span>Diseñado para cumplir la <b>Ley 21.719</b>.</span></li>
+      </ul>
+      <details class="toc-m">
+        <summary>En esta página<svg class="i" data-icon="plus"></svg></summary>
+        <nav aria-label="En esta página (celular)">
+          <a href="#seguridad" data-jump="s-datos">Qué datos usamos</a>
+          <a href="#seguridad" data-jump="s-no">Lo que nunca hacemos</a>
+          <a href="#seguridad" data-jump="s-como">Cómo los protegemos</a>
+          <a href="#seguridad" data-jump="s-derechos">Tus derechos</a>
+          <a href="#seguridad" data-jump="s-pagos">Pagos</a>
+          <a href="#seguridad" data-jump="s-alfa">Esta alfa</a>
+          <a href="#seguridad" data-jump="s-beta">Camino a la beta</a>
+        </nav>
+      </details>
+
+      <h2 id="s-datos">Qué datos usamos</h2>
+      <ul>
+        <li><b>Mediciones del tablero:</b> corriente y voltaje de cada circuito, varias veces por segundo.</li>
+        <li><b>Lo que la app deduce:</b> qué aparato se encendió, cuánto consumió y cuánto cuesta.</li>
+        <li><b>Datos de la cuenta:</b> nombre, comuna, distribuidora y tarifa, para calcular en pesos.</li>
+        <li><b>Tus ajustes:</b> metas de gasto, circuitos protegidos y cómo quieres recibir avisos.</li>
+      </ul>
+      <p>No usamos cámaras, micrófonos ni tu ubicación. El equipo mide electricidad y nada más.</p>
+
+      <h2 id="s-no">Lo que nunca hacemos</h2>
+      <ul>
+        <li>Vender o arrendar tus datos a nadie.</li>
+        <li>Pedirte datos de tarjetas o cuentas bancarias.</li>
+        <li>Mostrar tu nombre en el panel interno sin un motivo y un permiso.</li>
+        <li>Apagar un circuito que marcaste como protegido, como el del refrigerador.</li>
+      </ul>
+
+      <h2 id="s-como">Cómo los protegemos</h2>
+      <ul>
+        <li><b>Cifrado:</b> los datos viajan cifrados del tablero a la nube (TLS) y se guardan cifrados.</li>
+        <li><b>Cada uno ve lo suyo:</b> un cliente solo ve su casa. El equipo de Vatia ve códigos de cliente (por ejemplo VT-014), no nombres.</li>
+        <li><b>Mínimo acceso:</b> solo soporte puede ver datos de contacto, y cada consulta queda registrada.</li>
+        <li><b>Inicio de sesión seguro:</b> con doble verificación obligatoria para el equipo de Vatia.</li>
+        <li><b>Retención limitada:</b> el detalle segundo a segundo se resume después de 90 días. Los totales diarios se guardan para comparar meses.</li>
+        <li><b>El control es local primero:</b> si se pierde internet, el equipo nunca deja un circuito apagado.</li>
+      </ul>
+
+      <h2 id="s-derechos">Tus derechos</h2>
+      <p>Desde el 1 de diciembre de 2026 rige en Chile la Ley 21.719 de protección de datos personales. Vatia se diseña para cumplirla desde el comienzo. Puedes pedir en cualquier momento:</p>
+      <ul>
+        <li><b>Acceso:</b> ver todos los datos que tenemos de ti.</li>
+        <li><b>Rectificación:</b> corregir lo que esté mal.</li>
+        <li><b>Supresión:</b> borrar tu cuenta y tus mediciones.</li>
+        <li><b>Oposición y bloqueo:</b> frenar un uso de tus datos que no aceptes.</li>
+        <li><b>Portabilidad:</b> descargar tus mediciones en un formato abierto.</li>
+      </ul>
+
+      <h2 id="s-pagos">Pagos</h2>
+      <p>Vatia no cobra tu cuenta de luz. El botón "Pagar" te lleva al sitio oficial de tu distribuidora y te muestra su dirección antes de salir. Si alguien te escribe a nombre de Vatia pidiendo un pago o tu tarjeta, no somos nosotros.</p>
+
+      <h2 id="s-alfa">Esta alfa</h2>
+      <p>Lo que estás viendo es una demostración. Todo lo que aparece en Mi casa y en el Panel CEO son datos de ejemplo generados para la demo: no hay clientes reales detrás.</p>
+      <ul>
+        <li>No hay inicio de sesión ni cuentas.</li>
+        <li>El formulario del piloto no envía ni guarda lo que escribes.</li>
+        <li>Tus ajustes de la demo (tema, tarifa, meta) quedan solo en tu navegador.</li>
+        <li>Los enlaces de pago llevan a los sitios oficiales de cada distribuidora.</li>
+      </ul>
+
+      <h2 id="s-beta">Camino a la beta</h2>
+      <p>Antes de conectar la primera casa real, esto tiene que estar listo:</p>
+      <ul class="status-list" id="betaList"></ul>
+      <p class="src">Fuente: <a href="https://www.bcn.cl/balance-legislativo/detalle/ficha_LEY_21719_2024-12-13" target="_blank" rel="noopener">Biblioteca del Congreso Nacional, Ley 21.719</a>.</p>
+    </article>
+  </div>
+</main>
+
+<div class="toasts" id="toasts" aria-live="polite"></div>
+<div id="drawerHost"></div>
+
+<script src="assets/data.js"></script>
+<script src="assets/app.js"></script>
 </body>
 </html>

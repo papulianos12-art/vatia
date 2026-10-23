@@ -1,0 +1,360 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Vatia — Sabe en qué se te va la luz</title>
+<meta name="description" content="Vatia es un sensor no invasivo para tu tablero eléctrico que identifica cada artefacto encendido y te muestra el consumo en pesos, en tiempo real." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css" />
+<script>
+(function () {
+  var saved = localStorage.getItem("vatia-theme");
+  if (saved === "dark") document.documentElement.setAttribute("data-theme", "dark");
+})();
+</script>
+</head>
+<body>
+
+<div class="noise" aria-hidden="true"></div>
+
+<header class="nav" id="nav">
+  <div class="nav-inner">
+    <a href="#top" class="brand">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M13 2 4 14h6l-1 8 9-12h-6l1-8Z" fill="currentColor"/></svg>
+      </span>
+      Vatia
+    </a>
+    <nav class="nav-links" aria-label="Navegación principal">
+      <a href="#problema">El problema</a>
+      <a href="#como-funciona">Cómo funciona</a>
+      <a href="#dashboard">Dashboard</a>
+      <a href="#comparacion">Comparación</a>
+      <a href="#precio">Precio</a>
+      <a href="#seguridad">Seguridad</a>
+    </nav>
+    <div class="nav-actions">
+      <button type="button" class="theme-toggle" id="themeToggle" aria-label="Cambiar a modo oscuro" aria-pressed="false">
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="4.2" stroke="currentColor" stroke-width="1.6"/><path d="M12 2.5v2.4M12 19.1v2.4M4.9 4.9l1.7 1.7M17.4 17.4l1.7 1.7M2.5 12h2.4M19.1 12h2.4M4.9 19.1l1.7-1.7M17.4 6.6l1.7-1.7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4 8.5 8.5 0 1 0 20 14.5Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+      </button>
+      <a href="cuenta.html" class="view-switch">
+        <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="3.4" stroke="currentColor" stroke-width="1.6"/><path d="M5 20c0-3.6 3.1-6 7-6s7 2.4 7 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        Iniciar sesión
+      </a>
+      <a href="cuenta.html#crear" class="btn btn-small">Contratar</a>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-inner">
+      <h1>Sabe exactamente <span class="accent">en qué se te va la luz.</span></h1>
+      <p class="hero-sub">
+        Vatia se instala en tu tablero en minutos, sin tocar enchufes ni cambiar nada.
+        Identifica cada artefacto por su huella eléctrica y te muestra el gasto de cada uno,
+        en pesos, en tiempo real. Monitoreo no invasivo, hecho para tableros y tarifas chilenas.
+      </p>
+      <div class="hero-cta">
+        <a href="cuenta.html#crear" class="btn btn-primary">Quiero instalarlo</a>
+        <a href="#como-funciona" class="btn btn-ghost">Ver cómo funciona</a>
+      </div>
+      <div class="hero-trust">
+        <span><svg viewBox="0 0 24 24" fill="none"><path d="M12 2 4 5v6c0 5 3.4 8.7 8 10 4.6-1.3 8-5 8-10V5l-8-3Z" stroke="currentColor" stroke-width="1.6"/></svg> Datos cifrados</span>
+        <span><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/><path d="M8 12.5 11 15l5-6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> Instalación por electricista SEC</span>
+        <span><svg viewBox="0 0 24 24" fill="none"><path d="M12 21s-7-4.4-7-10.5A5 5 0 0 1 12 5a5 5 0 0 1 7 5.5C19 16.6 12 21 12 21Z" stroke="currentColor" stroke-width="1.6"/></svg> Tarifa chilena real</span>
+      </div>
+    </div>
+
+    <div class="hero-visual" aria-hidden="true">
+      <div class="panel-card">
+        <div class="panel-card-head">
+          <span class="dot dot-live"></span> Tablero en vivo
+        </div>
+        <div class="panel-rows" id="heroRows">
+          <!-- filled by JS -->
+        </div>
+        <div class="panel-total">
+          <span>Total del día</span>
+          <strong id="heroTotal">$0</strong>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROBLEMA -->
+  <section class="section" id="problema">
+    <div class="section-head">
+      <h2>La cuenta sube y nadie sabe por qué.</h2>
+    </div>
+    <div class="grid-3">
+      <div class="card">
+        <h3>El medidor solo da el total</h3>
+        <p>La distribuidora te dice cuánto gastaste en el mes, nunca qué aparato se lo llevó. Para cuando llega la boleta, ya es tarde para cambiar algo.</p>
+      </div>
+      <div class="card">
+        <h3>Los enchufes inteligentes no alcanzan</h3>
+        <p>Una estufa empotrada, un termo o una cocina eléctrica no se pueden enchufar a un Shelly. Necesitarías uno por aparato, y los grandes quedan afuera.</p>
+      </div>
+      <div class="card">
+        <h3>Lo que existe afuera, no es de acá</h3>
+        <p>Sense y productos similares están pensados para 120/240V a 60Hz. Nuestra red es 220V monofásica a 50Hz, con otros aparatos y otra tarifa.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- COMO FUNCIONA -->
+  <section class="section section-alt" id="como-funciona">
+    <div class="section-head">
+      <h2>Un sensor en el tablero. Nada que instalar en cada aparato.</h2>
+    </div>
+
+    <div class="how-grid">
+      <figure class="how-photo">
+        <img src="images/panel-switch-box.jpg" alt="Interruptor automático industrial en un tablero eléctrico" loading="lazy" width="1600" height="1200" />
+        <figcaption>La pinza se abre alrededor del cable, sin cortar ni desconectar nada.</figcaption>
+      </figure>
+
+      <ul class="how-list">
+        <li>
+          <h3>Instalación de 10 minutos</h3>
+          <p>Una pinza no invasiva se abre alrededor del cable principal o de cada circuito del tablero. No se corta ni se desconecta nada.</p>
+        </li>
+        <li>
+          <h3>Lee la firma eléctrica</h3>
+          <p>Cada vez que algo se prende o se apaga, el sensor mide el salto de potencia, su forma y sus armónicos: la huella única de ese aparato.</p>
+        </li>
+        <li>
+          <h3>Identifica en 1-2 segundos</h3>
+          <p>Un modelo entrenado con huellas de aparatos chilenos reconoce qué se encendió: hervidor, refrigerador, estufa, termo, lavadora.</p>
+        </li>
+        <li>
+          <h3>Te lo muestra en pesos</h3>
+          <p>La app traduce todo a tu tarifa real: cuánto va cada aparato en el mes y qué conviene cambiar para bajar la cuenta.</p>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- DASHBOARD DEMO -->
+  <section class="section" id="dashboard">
+    <div class="section-head">
+      <h2>Tu consumo, artefacto por artefacto, en vivo.</h2>
+      <p class="section-sub">Esta es una simulación con datos de ejemplo. Prende un aparato y mira cómo reacciona.</p>
+    </div>
+
+    <div class="dash">
+      <div class="dash-controls" id="dashControls" role="group" aria-label="Simular artefactos"></div>
+
+      <div class="dash-main">
+        <div class="dash-card dash-list">
+          <div class="dash-card-head">
+            <h3>Artefactos detectados</h3>
+            <span class="live-pill"><span class="dot dot-live"></span>En vivo</span>
+          </div>
+          <ul class="appliance-list" id="applianceList"></ul>
+        </div>
+
+        <div class="dash-card dash-summary">
+          <h3>Proyección del mes</h3>
+          <div class="summary-amount" id="monthTotal">$0</div>
+          <p class="summary-note">Tarifa de ejemplo: $195/kWh. Con datos reales, este número se ajusta a tu distribuidora.</p>
+          <div class="summary-bars" id="summaryBars"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- COMPARACION -->
+  <section class="section section-alt" id="comparacion">
+    <div class="section-head">
+      <h2>Ya existe afuera. Para Chile, no existía.</h2>
+    </div>
+
+    <div class="table-wrap">
+      <table class="compare">
+        <thead>
+          <tr>
+            <th></th>
+            <th>Enchufe inteligente</th>
+            <th>Medidor de la distribuidora</th>
+            <th>Sense (EE.UU.)</th>
+            <th class="col-vatia"><span class="col-vatia-badge">Vatia</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Identifica cada aparato</td>
+            <td class="no"><i class="cell-icon cell-no">✕</i>Solo el que enchufas</td>
+            <td class="no"><i class="cell-icon cell-no">✕</i>No</td>
+            <td class="maybe"><i class="cell-icon cell-maybe">~</i>Sí, en EE.UU.</td>
+            <td class="yes col-vatia"><i class="cell-icon cell-yes">✓</i>Sí</td>
+          </tr>
+          <tr>
+            <td>Sirve en tableros de 220V</td>
+            <td class="yes"><i class="cell-icon cell-yes">✓</i>Sí</td>
+            <td class="yes"><i class="cell-icon cell-yes">✓</i>Sí</td>
+            <td class="no"><i class="cell-icon cell-no">✕</i>No validado</td>
+            <td class="yes col-vatia"><i class="cell-icon cell-yes">✓</i>Sí</td>
+          </tr>
+          <tr>
+            <td>Tarifa chilena en pesos</td>
+            <td class="no"><i class="cell-icon cell-no">✕</i>No</td>
+            <td class="no"><i class="cell-icon cell-no">✕</i>No</td>
+            <td class="no"><i class="cell-icon cell-no">✕</i>No</td>
+            <td class="yes col-vatia"><i class="cell-icon cell-yes">✓</i>Sí</td>
+          </tr>
+          <tr>
+            <td>Un aparato grande (estufa, termo)</td>
+            <td class="no"><i class="cell-icon cell-no">✕</i>No se puede enchufar</td>
+            <td class="no"><i class="cell-icon cell-no">✕</i>No</td>
+            <td class="maybe"><i class="cell-icon cell-maybe">~</i>Parcial</td>
+            <td class="yes col-vatia"><i class="cell-icon cell-yes">✓</i>Sí</td>
+          </tr>
+          <tr>
+            <td>Costo aproximado</td>
+            <td>$15.000–25.000 c/u</td>
+            <td>Incluido, sin detalle</td>
+            <td>~US$230 + envío</td>
+            <td class="yes col-vatia">Prueba gratis, desde $2.990/mes</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- PRECIO -->
+  <section class="section" id="precio">
+    <div class="section-head">
+      <h2>Partes gratis. Después, un precio fijo.</h2>
+      <p class="section-sub">El equipo y la instalación los ponemos nosotros. Tú solo pagas la mensualidad, y puedes cancelar cuando quieras.</p>
+    </div>
+
+    <div class="price-timeline">
+      <div class="price-stage">
+        <div class="price-stage-period">Primeras 2 semanas</div>
+        <div class="price-stage-amount">Gratis</div>
+        <p>Prueba completa, sin tarjeta ni contrato. Si no te convence, pasamos a retirar el equipo.</p>
+      </div>
+      <div class="price-stage">
+        <div class="price-stage-period">Meses 1 a 3</div>
+        <div class="price-stage-amount">$2.990<span>/mes</span></div>
+        <p>Precio de lanzamiento mientras afinamos el reconocimiento de artefactos con los datos de tu tablero.</p>
+      </div>
+      <div class="price-stage price-stage-featured">
+        <div class="price-stage-period">Desde el mes 4</div>
+        <div class="price-stage-amount">$3.990<span>/mes</span></div>
+        <p>Precio normal para hogares. Incluye el equipo, la instalación y el soporte.</p>
+      </div>
+    </div>
+
+    <div class="price-pyme">
+      <div class="price-pyme-text">
+        <h3>¿Eres pyme?</h3>
+        <p>Un almacén, panadería o taller consume más y suele necesitar medir varios circuitos, así que el valor mensual es un poco mayor desde el mes 4. La prueba de 2 semanas y el precio de lanzamiento aplican igual.</p>
+      </div>
+      <div class="price-pyme-amounts">
+        <div><span>Meses 1 a 3</span><strong>$3.990<small>/mes</small></strong></div>
+        <div><span>Desde el mes 4</span><strong>$5.990<small>/mes</small></strong></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SEGURIDAD -->
+  <section class="section section-alt" id="seguridad">
+    <div class="section-head">
+      <h2>Seguro, privado y certificado.</h2>
+    </div>
+
+    <div class="trust-split">
+      <figure class="trust-photo">
+        <img src="images/panel-wall-mounted.jpg" alt="Tablero eléctrico moderno con interruptores automáticos rotulados" loading="lazy" width="1600" height="1067" />
+        <figcaption>Así queda tu tablero: ordenado, rotulado y certificado por un instalador SEC.</figcaption>
+      </figure>
+
+      <dl class="trust-facts">
+        <div>
+          <dt>Cifrado de extremo a extremo</dt>
+          <dd>Los datos de consumo viajan y se guardan cifrados. Nada se vende a terceros sin tu permiso explícito.</dd>
+        </div>
+        <div>
+          <dt>Instalación certificada SEC</dt>
+          <dd>Tu tablero lo abre siempre un instalador eléctrico autorizado por la Superintendencia de Electricidad y Combustibles.</dd>
+        </div>
+        <div>
+          <dt>Cumplimiento de la ley de datos personales</dt>
+          <dd>Saber a qué hora prende un aparato es un dato sensible. Lo tratamos según la nueva ley chilena de protección de datos, sin excepciones.</dd>
+        </div>
+        <div>
+          <dt>Sin cámaras, sin micrófonos</dt>
+          <dd>Solo medimos corriente y voltaje en el tablero. Nunca vemos ni escuchamos dentro de tu casa.</dd>
+        </div>
+      </dl>
+    </div>
+  </section>
+
+  <!-- CONTACTO / CTA -->
+  <section class="section section-alt cta" id="contacto">
+    <div class="cta-inner">
+      <h2>Partamos con tu tablero.</h2>
+      <p>Cuéntanos quién eres y qué necesitas. Te contactamos para coordinar la instalación o resolver tus dudas.</p>
+      <form class="cta-form" id="ctaForm">
+        <input type="text" name="nombre" placeholder="Nombre completo" required />
+        <input type="tel" name="telefono" placeholder="Teléfono (+56 9 ...)" required />
+        <input type="email" name="email" placeholder="Correo electrónico" required />
+        <select name="tipo">
+          <option value="hogar">Soy un hogar</option>
+          <option value="pyme">Tengo una pyme</option>
+          <option value="instalador">Soy instalador solar</option>
+        </select>
+        <select name="servicio">
+          <option value="instalacion">Me interesa instalar Vatia</option>
+          <option value="cotizacion">Quiero una cotización</option>
+          <option value="alianza">Alianza / instalador</option>
+          <option value="soporte">Soporte a un equipo existente</option>
+          <option value="otro">Otra consulta</option>
+        </select>
+        <textarea name="mensaje" placeholder="Cuéntanos tu caso (opcional)" rows="3"></textarea>
+        <button type="submit" class="btn btn-primary">Enviar</button>
+      </form>
+      <p class="cta-note" id="ctaNote" aria-live="polite"></p>
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M13 2 4 14h6l-1 8 9-12h-6l1-8Z" fill="currentColor"/></svg>
+        </span>
+        Vatia
+      </div>
+      <div class="footer-contact">
+        <a href="tel:+56912345678">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M4 5c0-1 .8-2 2-2h2l2 5-2 1.5c.8 2 2.2 3.4 4 4.2L13.5 12l5 2v2c0 1.2-1 2-2 2-7 0-12.5-5.5-12.5-13Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+          +56 9 1234 5678
+        </a>
+        <a href="mailto:contacto@vatia.cl">
+          <svg viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="m4 7 8 6 8-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          contacto@vatia.cl
+        </a>
+      </div>
+    </div>
+    <p>Monitoreo eléctrico no invasivo, hecho para tableros y tarifas chilenas.</p>
+    <p class="footer-fine">Teléfono y correo son datos de ejemplo mientras definimos el canal oficial. Los montos y datos de consumo de esta página también son de ejemplo, con fines de demostración.</p>
+  </div>
+</footer>
+
+<script src="theme.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
