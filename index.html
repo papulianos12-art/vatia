@@ -6,7 +6,7 @@
 <title>Vatia · Cada aparato de tu casa, en pesos</title>
 <meta name="description" content="Vatia: un sensor en el tablero que reconoce cada aparato de tu casa y te dice cuánto cuesta, en pesos y en vivo.">
 <meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#151D24" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#101211" media="(prefers-color-scheme: dark)">
 <link rel="canonical" href="https://vatia.cl/">
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <meta property="og:type" content="website">
@@ -20,7 +20,7 @@
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Semi+Condensed:wght@600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&display=swap">
 <link rel="stylesheet" href="assets/styles.css">
 </head>
 <body>
@@ -28,7 +28,7 @@
 
 <header class="topbar">
   <div class="topbar-in">
-    <a class="wordmark" href="#inicio" aria-label="Vatia, inicio" translate="no">Vati<b>a</b></a>
+    <a class="wordmark" href="#inicio" aria-label="Vatia, inicio" translate="no"><svg class="mark" viewBox="0 0 22 18" aria-hidden="true"><rect x="0" y="0" width="9" height="4" fill="var(--e1)"/><rect x="0" y="7" width="14" height="4" fill="var(--e4)"/><rect x="0" y="14" width="20" height="4" fill="var(--e7)"/></svg>Vatia</a>
     <nav class="mainnav" aria-label="Secciones">
       <a href="#inicio" data-route="inicio"><svg class="i" data-icon="home"></svg>Inicio</a>
       <a href="#casa" data-route="casa"><svg class="i" data-icon="bolt"></svg>Mi casa</a>
@@ -48,130 +48,108 @@
 <!-- ===================== INICIO ===================== -->
 <main class="view" id="view-inicio" data-view="inicio">
 
-  <section class="ch ch-amber hero" aria-labelledby="hero-h">
-    <div class="ch-in">
-      <div class="hero-copy">
-        <h1 id="hero-h"><span class="l1">Cada aparato,</span> <span>en pesos.</span></h1>
-        <p class="hero-lead">Vatia se instala en el tablero de tu casa, reconoce cada aparato por su huella eléctrica y te muestra en vivo cuánto te está costando.</p>
-        <div class="hero-actions">
-          <a class="btn btn-dark btn-big" href="#piloto">Pedir el piloto</a>
-          <a class="btn btn-line btn-big" href="#casa">Ver la demo de una casa</a>
-        </div>
-        <ul class="hero-meta" aria-label="Datos técnicos">
-          <li>Hecho para tableros chilenos</li><li>220 V · 50 Hz</li><li>Concepción, 2026</li>
-        </ul>
-      </div>
+  <section class="hero" aria-labelledby="hero-h">
+    <div class="wrap">
+      <article class="label">
+        <header class="label-top">
+          <h1 id="hero-h">Cada aparato,<br> en pesos.</h1>
+          <p class="label-lead">Vatia se instala en el tablero de tu casa, reconoce cada aparato por su huella eléctrica y te muestra en vivo cuánto te está costando.</p>
+        </header>
 
-      <aside class="live-card" aria-labelledby="lc-h">
+        <div class="label-body">
+          <div class="bill-in">
+            <label for="billInput">Escribe el total de tu última boleta</label>
+            <div class="bill-total"><span aria-hidden="true">$</span><input id="billInput" inputmode="numeric" autocomplete="off" value="60.650" aria-describedby="billNote"></div>
+            <div class="bill-chips" role="group" aria-label="Ejemplos de boleta">
+              <button type="button" data-bill="38000" aria-pressed="false">$38.000</button>
+              <button type="button" data-bill="60650" aria-pressed="true">$60.650</button>
+              <button type="button" data-bill="95000" aria-pressed="false">$95.000</button>
+            </div>
+            <p class="bill-note" id="billNote">La distribuidora te dice cuánto pagas. Vatia te dice en qué: así se repartiría en una casa típica con estufa eléctrica y termo.</p>
+          </div>
+
+          <div class="scale-wrap">
+            <p class="scale-end">Gasta menos</p>
+            <div class="scale" id="bdScale" role="list" aria-label="Reparto de tu boleta por aparato"></div>
+            <p class="scale-end">Gasta más</p>
+          </div>
+        </div>
+
+        <footer class="label-foot">
+          <div class="lf-fact"><span>Energía del mes</span><b class="num" id="bdKwh">236 kWh</b></div>
+          <div class="lf-fact"><span>Con avisos y el termo programado, ahorro posible</span><b class="num" id="bdSave">$4.852 al mes</b></div>
+          <div class="lf-cta">
+            <a class="btn btn-primary btn-big" href="#piloto">Pedir el piloto</a>
+            <a class="btn btn-line btn-big" href="#casa">Ver la demo de una casa</a>
+          </div>
+        </footer>
+      </article>
+      <p class="label-fine">Reparto estimado de una casa de ejemplo, con tarifa BT1 de $257/kWh. Hecho para tableros chilenos de 220 V y 50 Hz.</p>
+    </div>
+  </section>
+
+  <section class="live" aria-labelledby="live-h">
+    <div class="wrap live-in">
+      <div class="live-copy">
+        <h2 id="live-h">Tu casa, en vivo.</h2>
+        <p>Unas pinzas en el tablero miden cada circuito varias veces por segundo. En la app ves qué está encendido, cuánto cuesta hoy y qué tan cerca estás de que salte el automático.</p>
+        <p>Si te acercas al límite, Vatia pausa el termo unos minutos y lo vuelve a encender solo.</p>
+        <a class="link-arrow" href="#casa">Abrir Mi casa <svg class="i" data-icon="arrow"></svg></a>
+      </div>
+      <div class="live-card" aria-labelledby="lc-h">
         <div class="lc-head">
-          <h2 id="lc-h"><span class="live-dot" aria-hidden="true"></span>Hogar de ejemplo, en vivo</h2>
-          <span class="lc-tag">Datos de ejemplo</span>
+          <h3 id="lc-h"><span class="live-dot" aria-hidden="true"></span>Hogar de ejemplo</h3>
+          <span class="lc-tag">Datos simulados</span>
         </div>
         <div class="lc-figs">
           <div><span>Consumo ahora</span><b class="num" id="hNow">0 W</b></div>
           <div><span>Gasto de hoy</span><b class="num" id="hToday">$0</b></div>
         </div>
-        <ul class="lc-list" id="hList"></ul>
+        <ul class="lc-circ" id="hCirc" aria-label="Circuitos del tablero"></ul>
         <div class="lc-amp">
-          <div><span>Automático general</span><b class="num" id="hAmp">0 / 25 A</b></div>
-          <div class="meter"><i id="hAmpBar"></i></div>
+          <div class="lc-amp-row"><span>Automático general</span><b class="num" id="hAmp">0 / 25 A</b></div>
+          <div class="ampbar"><i id="hAmpBar"></i><u aria-hidden="true"></u></div>
           <p id="hAmpNote">Si la casa se acerca a 25 A, Vatia pausa el termo unos minutos.</p>
         </div>
-        <a class="lc-link" href="#casa">Abrir Mi casa <svg class="i" data-icon="arrow"></svg></a>
-      </aside>
-    </div>
-  </section>
-
-  <section class="split" aria-labelledby="split-h">
-    <div class="ch-in split-in">
-      <div class="split-copy">
-        <h2 id="split-h">Tu boleta, por dentro</h2>
-        <p>La distribuidora te dice cuánto pagas. No te dice en qué. Escribe el total de tu última boleta y mira cómo se repartiría en una casa típica con estufa eléctrica y termo.</p>
-        <div class="bill-in">
-          <label for="billInput">Total de tu última boleta</label>
-          <div class="bill-total"><span aria-hidden="true">$</span><input id="billInput" inputmode="numeric" autocomplete="off" value="60.650" aria-describedby="billNote"></div>
-          <div class="bill-chips" role="group" aria-label="Ejemplos de boleta">
-            <button type="button" data-bill="38000" aria-pressed="false">$38.000</button>
-            <button type="button" data-bill="60650" aria-pressed="true">$60.650</button>
-            <button type="button" data-bill="95000" aria-pressed="false">$95.000</button>
-          </div>
-          <p class="bill-note" id="billNote">Reparto estimado de una casa de ejemplo, con tarifa BT1 de $257/kWh.</p>
-        </div>
-      </div>
-      <div class="breakdown" aria-live="polite">
-        <h3>Lo que Vatia te mostraría</h3>
-        <p class="sub">Reparto estimado por aparato</p>
-        <ul class="bd-list" id="bdList"></ul>
-        <div class="bd-foot"><span>Total</span><span class="num" id="bdTotal">$60.650</span></div>
-        <p class="bd-tip" id="bdTip"></p>
       </div>
     </div>
   </section>
 
-  <section class="feat" aria-labelledby="board-h">
-    <div class="feat-grid">
-      <div class="tile t-head">
-        <h2 id="board-h">Lo que ves en la app</h2>
-        <p>Todo lo que pasa en tu tablero, dicho en pesos y en palabras simples.</p>
-        <a class="link-arrow" href="#casa">Abrir la demo <svg class="i" data-icon="arrow"></svg></a>
-      </div>
-      <div class="tile t-app">
-        <div class="frag frag-rows" aria-hidden="true">
-          <div class="ui-row"><i style="background:var(--s4)"></i><div><b>Estufa eléctrica</b><small>Living y dormitorios</small></div><div class="w">2.000 W</div><span class="p">Encendida</span></div>
-          <div class="ui-row"><i style="background:var(--s5)"></i><div><b>Termo eléctrico</b><small>Circuito propio</small></div><div class="w">1.500 W</div><span class="p">Encendido</span></div>
-        </div>
-        <div class="cap"><h3>Cada aparato, en vivo</h3><p>Reconoce estufa, termo, hervidor y refrigerador por su huella eléctrica.</p></div>
-      </div>
-      <div class="tile t-amp">
-        <div class="frag frag-meter" aria-hidden="true"><div class="lbl num">17,4<small> / 25 A</small></div><div class="bar"><i></i></div></div>
-        <div class="cap"><h3>Que no salte el automático</h3><p>Si te acercas al límite, pausa el termo unos minutos.</p></div>
-      </div>
-      <div class="tile t-peso">
-        <div class="frag frag-fig num" aria-hidden="true">$1.694</div>
-        <div class="cap"><h3>Gasto de hoy</h3><p>En pesos, con tu tarifa.</p></div>
-      </div>
-      <div class="tile t-tog">
-        <div class="frag frag-tog" aria-hidden="true"><span>Termo</span><span class="sw"></span></div>
-        <div class="cap"><h3>Control desde el celular</h3><p>Programa el termo o apágalo.</p></div>
-      </div>
-      <div class="tile t-alert">
-        <div class="frag frag-alert" aria-hidden="true"><b><em>Falla</em> Refrigerador +30%</b><span>Trabaja más que el mes pasado. Revisa el sello de la puerta.</span></div>
-        <div class="cap"><h3>Avisos antes de que algo falle</h3><p>Compara cada aparato con su propio historial.</p></div>
-      </div>
-      <div class="tile t-pay">
-        <div class="frag frag-pay" aria-hidden="true">Pagar en CGE <svg class="i" data-icon="external"></svg></div>
-        <div class="cap"><h3>Paga en el sitio oficial</h3><p>Vatia nunca pide tu tarjeta.</p></div>
-      </div>
-      <div class="tile t-cut">
-        <div class="frag frag-cut num" aria-hidden="true">03:12<small>42 min sin luz</small></div>
-        <div class="cap"><h3>Registro de cortes</h3><p>Respaldo para reclamar.</p></div>
-      </div>
-      <div class="tile t-ceo">
-        <div class="frag frag-spark" aria-hidden="true"><svg viewBox="0 0 300 80"><path d="M0 62 C30 60 40 40 70 46 S110 64 140 50 S190 10 220 18 S270 52 300 40" fill="none" stroke="var(--f-amber)" stroke-width="4" stroke-linecap="round"/><circle cx="300" cy="40" r="6" fill="var(--f-amber)"/></svg></div>
-        <div class="cap"><h3>Para pymes con varios locales</h3><p>Un panel con todos los locales y sus alertas.</p></div>
-      </div>
+  <section class="spec" aria-labelledby="spec-h">
+    <div class="wrap">
+      <h2 id="spec-h">Lo que ves en la app</h2>
+      <dl class="spec-list">
+        <div><dt>Cada aparato, en vivo</dt><dd>Reconoce estufa, termo, hervidor y refrigerador por su huella eléctrica.</dd><dd class="spec-v"><span class="chip-on">Estufa · 2.000 W</span></dd></div>
+        <div><dt>Gasto de hoy, en pesos</dt><dd>Con tu tarifa, sin tener que calcular nada.</dd><dd class="spec-v num big">$1.694</dd></div>
+        <div><dt>Que no salte el automático</dt><dd>Si te acercas al límite, pausa el termo unos minutos.</dd><dd class="spec-v num">17,4 / 25 A</dd></div>
+        <div><dt>Control desde el celular</dt><dd>Programa el termo o apágalo.</dd><dd class="spec-v"><span class="toggle-art" aria-hidden="true"></span></dd></div>
+        <div><dt>Avisos antes de que algo falle</dt><dd>Compara cada aparato con su propio historial.</dd><dd class="spec-v"><span class="warn-tag">Refrigerador +30%</span></dd></div>
+        <div><dt>Registro de cortes</dt><dd>Hora y duración, como respaldo para reclamar.</dd><dd class="spec-v num">42 min sin luz</dd></div>
+        <div><dt>Pago en el sitio oficial</dt><dd>Te lleva a tu distribuidora. Vatia nunca pide tu tarjeta.</dd><dd class="spec-v"><span class="pay-art">Pagar en CGE <svg class="i" data-icon="external"></svg></span></dd></div>
+        <div><dt>Para pymes con varios locales</dt><dd>Un panel con todos los locales y sus alertas.</dd><dd class="spec-v">Plan Pyme</dd></div>
+      </dl>
     </div>
   </section>
 
-  <section class="ch ch-paper how" aria-labelledby="how-h">
-    <div class="ch-in">
+  <section class="how" aria-labelledby="how-h">
+    <div class="wrap">
       <h2 id="how-h">Así llega a tu casa</h2>
       <ol class="steps">
-        <li class="step s-a"><div class="bar-seg"><strong>20 minutos</strong></div><p>Primero, un técnico pone las pinzas en el tablero. No se corta ningún cable.</p></li>
-        <li class="step s-b"><div class="bar-seg"><strong>Unos 7 días</strong></div><p>Después, Vatia aprende la huella de cada aparato de tu casa.</p></li>
-        <li class="step s-c"><div class="bar-seg"><strong>Todos los días</strong></div><p>Desde ahí, ves el gasto en pesos, recibes avisos y controlas el termo.</p></li>
+        <li><span class="stepbar" style="--w:34%;--c:var(--e5)"><b>20 minutos</b></span><p>Un técnico autorizado pone las pinzas en el tablero. No se corta ningún cable.</p></li>
+        <li><span class="stepbar" style="--w:62%;--c:var(--e3)"><b>Unos 7 días</b></span><p>Vatia aprende la huella de cada aparato de tu casa.</p></li>
+        <li><span class="stepbar" style="--w:100%;--c:var(--e1)"><b>Todos los días</b></span><p>Ves el gasto en pesos, recibes avisos y controlas el termo.</p></li>
       </ol>
     </div>
   </section>
 
-  <section class="ch ch-blue pricing" id="precios" aria-labelledby="price-h">
-    <div class="ch-in">
-      <h2 id="price-h">Todo Vatia, por un precio fijo al mes.</h2>
+  <section class="pricing" id="precios" aria-labelledby="price-h">
+    <div class="wrap">
+      <h2 id="price-h">Un precio fijo al mes.</h2>
       <p class="price-lead">Sensor, instalación y app incluidos, en comodato y sin pago inicial.</p>
       <div class="plans">
-        <article class="plan" aria-labelledby="plan-hogar">
-          <h3 id="plan-hogar">Hogar</h3>
-          <p class="plan-price"><span class="num">$3.990</span> al mes</p>
+        <article class="plan plan-main" aria-labelledby="plan-hogar">
+          <h3 id="plan-hogar">Plan Hogar</h3>
+          <p class="plan-price"><b class="num">$3.990</b><span>al mes</span></p>
           <ul>
             <li><svg class="i" data-icon="check"></svg>Cada aparato de tu casa, en pesos y en vivo</li>
             <li><svg class="i" data-icon="check"></svg>Control del termo para que no salte el automático</li>
@@ -181,23 +159,23 @@
           <a class="btn btn-primary btn-big" href="#piloto" data-plan="Hogar">Pedir el piloto para mi casa</a>
         </article>
         <article class="plan" aria-labelledby="plan-pyme">
-          <h3 id="plan-pyme">Pyme</h3>
-          <p class="plan-price"><span class="num">$9.990</span> al mes</p>
+          <h3 id="plan-pyme">Plan Pyme</h3>
+          <p class="plan-price"><b class="num">$9.990</b><span>al mes</span></p>
           <ul>
             <li><svg class="i" data-icon="check"></svg>Todo lo del plan Hogar</li>
             <li><svg class="i" data-icon="check"></svg>Un panel con todos tus locales y sus alertas</li>
             <li><svg class="i" data-icon="check"></svg>Aviso si la refrigeración empieza a fallar</li>
             <li><svg class="i" data-icon="check"></svg>Para almacenes, panaderías y talleres</li>
           </ul>
-          <a class="btn btn-onblue btn-big" href="#piloto" data-plan="Pyme">Pedir el piloto para mi pyme</a>
+          <a class="btn btn-line btn-big" href="#piloto" data-plan="Pyme">Pedir el piloto para mi pyme</a>
         </article>
       </div>
       <p class="price-note">Precios a validar en el piloto.</p>
     </div>
   </section>
 
-  <section class="ch ch-paper faq" aria-labelledby="faq-h">
-    <div class="ch-in faq-in">
+  <section class="faq" aria-labelledby="faq-h">
+    <div class="wrap faq-in">
       <h2 id="faq-h">Preguntas</h2>
       <div class="faq-list">
         <details open><summary>¿Hay que cortar cables?<svg class="i" data-icon="plus"></svg></summary><p>No. Las pinzas abrazan el cable de cada circuito por fuera. Igual lo instala un técnico autorizado SEC, porque hay que abrir el tablero.</p></details>
@@ -209,10 +187,10 @@
     </div>
   </section>
 
-  <section class="ch ch-ink cta" id="piloto" aria-labelledby="cta-h">
-    <div class="ch-in cta-in">
+  <section class="cta" id="piloto" aria-labelledby="cta-h">
+    <div class="wrap cta-in">
       <div>
-        <h2 id="cta-h">Pide el piloto</h2>
+        <h2 id="cta-h">Pide el piloto.</h2>
         <p class="cta-lead">Estamos instalando los primeros equipos en el Gran Concepción. Dinos dónde estás y te avisamos cuando lleguemos.</p>
       </div>
       <form id="ctaForm" class="cta-form" novalidate>
@@ -226,16 +204,16 @@
           <input id="comuna" name="comuna" list="comunas" placeholder="Por ejemplo, Concepción…" spellcheck="false" autocomplete="address-level2" aria-describedby="ctaAfter">
           <datalist id="comunas"><option value="Concepción"><option value="San Pedro de la Paz"><option value="Talcahuano"><option value="Chiguayante"><option value="Hualpén"><option value="Penco"><option value="Coronel"><option value="Los Ángeles"></datalist>
         </div>
-        <button class="btn btn-primary btn-big" type="submit">Pedir el piloto</button>
+        <button class="btn btn-invert btn-big" type="submit">Pedir el piloto</button>
         <p class="after" id="ctaAfter" aria-live="polite">Es una alfa: lo que escribas queda solo en esta página, no se envía ni se guarda.</p>
       </form>
     </div>
   </section>
 
   <footer class="foot">
-    <div class="ch-in foot-in">
+    <div class="wrap foot-in">
       <div class="foot-brand">
-        <a class="wordmark" href="#inicio" translate="no">Vati<b>a</b></a>
+        <a class="wordmark" href="#inicio" translate="no"><svg class="mark" viewBox="0 0 22 18" aria-hidden="true"><rect x="0" y="0" width="9" height="4" fill="var(--e1)"/><rect x="0" y="7" width="14" height="4" fill="var(--e4)"/><rect x="0" y="14" width="20" height="4" fill="var(--e7)"/></svg>Vatia</a>
         <p>Proyecto de estudiantes de Ingeniería Civil Eléctrica de la Universidad de Concepción, programa Despega de Gearbox.</p>
       </div>
       <nav aria-label="Demo">

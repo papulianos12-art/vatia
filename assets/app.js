@@ -120,19 +120,37 @@
      INICIO
      ================================================================ */
   const SHARE = [['Estufa eléctrica', .45, 's4'], ['Termo eléctrico', .26, 's5'], ['Refrigerador', .11, 's1'], ['Hervidor', .09, 's2'], ['Televisor', .03, 's3'], ['Luces y otros', .06, 's6']];
-  const bdList = $('#bdList');
-  bdList.innerHTML = SHARE.map(([n, , s]) => `<li class="bd-row"><span class="nm"><i style="background:var(--${s})"></i>${n}</span><span class="trk"><span class="fill" style="display:block;background:var(--${s});transform:scaleX(0)"></span></span><span class="v num">$0</span></li>`).join('');
+
+  /* La escala de la etiqueta: barras escalonadas de la que gasta menos (verde) a la que gasta más (roja).
+     Una flecha negra apunta a la barra elegida y dice qué parte del total es. */
+  const DARK_TEXT = { s1: 1, s2: 1, s5: 1, s6: 1 };
+  function makeScale(host, items, noun) {
+    const rows = items.slice().sort((x, y) => x.share - y.share);
+    const max = rows[rows.length - 1].share;
+    let sel = rows.length - 1;
+    host.innerHTML = rows.map((r, i) => `<div class="srow-w" role="listitem"><button type="button" class="srow" data-i="${i}" aria-pressed="false" style="--w:${(38 + 62 * r.share / max).toFixed(1)}%;--c:var(--${r.series});--t:${DARK_TEXT[r.series] ? 'var(--e-ink)' : '#fff'}"><span class="sbar"><span class="snm">${r.name}</span></span><span class="samt num">$0</span></button></div>`).join('') +
+      `<div class="pointer" aria-hidden="true"><b class="num">0%</b><span>${noun}</span></div>`;
+    const ptr = $('.pointer', host);
+    const paint = () => {
+      $$('.srow', host).forEach((b, i) => b.setAttribute('aria-pressed', String(i === sel)));
+      ptr.style.setProperty('--row', sel);
+      $('b', ptr).textContent = fmt(rows[sel].share * 100) + '%';
+    };
+    host.addEventListener('click', e => { const b = e.target.closest('.srow'); if (!b) return; sel = +b.dataset.i; paint(); });
+    paint();
+    return function update(total) {
+      $$('.srow', host).forEach((b, i) => {
+        const v = clp(rows[i].value != null ? rows[i].value : total * rows[i].share);
+        $('.samt', b).textContent = v;
+        b.setAttribute('aria-label', `${rows[i].name}: ${v}, ${fmt(rows[i].share * 100)}% ${noun}`);
+      });
+    };
+  }
+  const billScale = makeScale($('#bdScale'), SHARE.map(([name, share, series]) => ({ name, share, series })), 'de tu boleta');
   function renderBill(total) {
-    const max = SHARE[0][1];
-    $$('.bd-row', bdList).forEach((row, i) => {
-      const [, sh] = SHARE[i];
-      $('.fill', row).style.transform = `scaleX(${(sh / max).toFixed(3)})`;
-      $('.v', row).textContent = clp(total * sh);
-    });
-    $('#bdTotal').textContent = clp(total);
-    const kwh = total / V.TARIFA;
-    const save = total * 0.08;
-    $('#bdTip').innerHTML = `Son unos <b class="num">${fmt(kwh)} kWh</b>. Con avisos y el termo programado, una casa así podría ahorrar cerca de <b class="num">${clp(save)}</b> al mes.`;
+    billScale(total);
+    $('#bdKwh').textContent = fmt(total / V.TARIFA) + ' kWh';
+    $('#bdSave').textContent = clp(total * 0.08) + ' al mes';
   }
   const billInput = $('#billInput');
   function readBill() { const n = parseInt(billInput.value.replace(/\D/g, ''), 10); return isFinite(n) ? n : 0; }
@@ -168,16 +186,19 @@
 
   /* ---- Vista en vivo del inicio (usa la misma simulación que Mi casa) ---- */
   function updateHero() {
-    const ul = $('#hList'); if (!ul || sim.total == null) return;
+    const ul = $('#hCirc'); if (!ul || sim.total == null) return;
     if (!ul.children.length) {
-      ul.innerHTML = AP.filter(a => a.id !== 'otros').map(a => `<li data-h="${a.id}"><i style="background:var(--${a.series})"></i><span>${a.name}</span><span class="trk"><span class="fill" style="background:var(--${a.series})"></span></span><b class="num">0 W</b></li>`).join('');
+      ul.innerHTML = V.CIRCUITS.map(c => `<li data-c="${c.id}"><span class="cn"><b>${c.name}</b><small>${c.id.toUpperCase()} · ${c.amp} A</small></span><span class="cbar"><i></i></span><b class="num ca">0 A</b></li>`).join('');
     }
     $$('li', ul).forEach(li => {
-      const a = byId(li.dataset.h);
-      $('.fill', li).style.transform = `scaleX(${Math.min(1, a.p / 2000).toFixed(3)})`;
-      $('b', li).textContent = fmt(a.p) + ' W';
-      li.classList.toggle('off', a.p < 1);
-      li.classList.toggle('flash', (sim.flash[a.id] || 0) > 0);
+      const c = V.CIRCUITS.find(x => x.id === li.dataset.c);
+      const a = AP.filter(x => x.circuit === c.id).reduce((t, x) => t + x.p, 0) / 220;
+      const r = Math.min(1, a / c.amp);
+      const i = $('.cbar i', li);
+      i.style.transform = `scaleX(${r.toFixed(3)})`;
+      i.style.background = r > .9 ? 'var(--bad)' : r > .7 ? 'var(--e5)' : 'var(--e1)';
+      $('.ca', li).textContent = c.id === 'c3' && sim.shedLeft > 0 ? 'Pausado' : fmt(a, 1) + ' A';
+      li.classList.toggle('paused', c.id === 'c3' && sim.shedLeft > 0);
     });
     const amp = sim.total / 220, pct = amp / 25;
     $('#hNow').textContent = fmt(sim.total) + ' W';
@@ -185,8 +206,8 @@
     $('#hAmp').textContent = `${fmt(amp, 1)} / 25 A`;
     const bar = $('#hAmpBar');
     bar.style.transform = `scaleX(${Math.min(1, pct).toFixed(3)})`;
-    bar.style.background = pct > .96 ? 'var(--bad)' : pct > .8 ? 'var(--warn)' : 'var(--good)';
-    $('#hAmpNote').textContent = sim.shedLeft > 0 ? 'Termo pausado por Vatia para que no salte el automático.' : 'Si la casa se acerca a 25 A, Vatia pausa el termo unos minutos.';
+    bar.style.background = pct > .96 ? 'var(--bad)' : pct > .8 ? 'var(--e5)' : 'var(--e1)';
+    $('#hAmpNote').textContent = sim.shedLeft > 0 ? 'Termo pausado por Vatia para que no salte el automático. Vuelve solo en unos minutos.' : 'Si la casa se acerca a 25 A, Vatia pausa el termo unos minutos.';
   }
 
   /* ================================================================
@@ -328,10 +349,16 @@
       <div><div class="k-label">Proyección del mes</div><div class="k-val">$71.600</div><div class="k-sub"><span class="up">+9,8%</span> vs septiembre ($65.200)</div></div>
       <div><div class="k-label">Automático general</div><div class="k-val" id="kAmp">0<small>/ 25 A</small></div><div class="meter"><i id="kAmpBar"></i></div></div>
     </div>
-    <section class="panel" style="margin-top:20px" aria-labelledby="tab-h">
-      <div class="panel-h"><h2 id="tab-h">Tu tablero</h2><span>Toca un circuito para ver sus aparatos</span></div>
-      <div class="tablero" id="tablero"></div>
-    </section>
+    <div class="grid-2 grid-top">
+      <section class="panel" aria-labelledby="tab-h">
+        <div class="panel-h"><h2 id="tab-h">Tu tablero</h2><span>Toca un circuito para ver sus aparatos</span></div>
+        <div class="tablero" id="tablero"></div>
+      </section>
+      <section class="panel" aria-labelledby="mes-h">
+        <div class="panel-h"><h2 id="mes-h">Tu mes, por aparato</h2><span>Proyección de octubre</span></div>
+        <div class="scale scale-sm" id="mesScale" role="list" aria-label="Gasto del mes por aparato"></div>
+      </section>
+    </div>
     <div class="grid-2">
       <section class="panel chart" aria-labelledby="ch-h">
         <div class="panel-h"><h2 id="ch-h">Potencia por aparato</h2><span>Últimos 30 minutos</span></div>
@@ -346,6 +373,8 @@
   }
   let circuitFilter = null;
   function bindResumen() {
+    const tot = AP.reduce((t, a) => t + a.month, 0);
+    makeScale($('#mesScale'), AP.map(a => ({ name: a.name, share: a.month / tot, series: a.series, value: a.month })), 'del mes')(tot);
     const tb = $('#tablero');
     tb.innerHTML = `<div class="din main"><div class="din-top">General <em>25 A</em></div><div class="din-lever"><i id="dinMain"></i></div><div class="din-amp" id="dinMainA">0 A</div><div class="din-sub">Empalme 220 V</div></div>` +
       V.CIRCUITS.map(c => `<button type="button" class="din" data-c="${c.id}" aria-pressed="false"><span class="din-top">${c.id.toUpperCase()} <em>${c.amp} A</em></span><span class="din-lever"><i data-lever="${c.id}"></i></span><span class="din-amp" data-amp="${c.id}">0 A</span><span class="din-sub">${c.name}<br>${c.note}</span><span class="state" data-state="${c.id}"></span></button>`).join('');
